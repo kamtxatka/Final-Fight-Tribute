@@ -12,20 +12,21 @@
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
+	idleState = {91,3,45,86};
 	// idle animation (just the ship)
-	idle.frames.push_back({66, 1, 32, 14});
+	//idle.frames.push_back({66, 1, 32, 14});
 
-	// move upwards
-	up.frames.push_back({100, 1, 32, 14});
-	up.frames.push_back({132, 0, 32, 14});
-	up.loop = false;
-	up.speed = 0.1f;
+	//// move upwards
+	//up.frames.push_back({100, 1, 32, 14});
+	//up.frames.push_back({132, 0, 32, 14});
+	//up.loop = false;
+	//up.speed = 0.1f;
 
-	// Move down
-	down.frames.push_back({33, 1, 32, 14});
-	down.frames.push_back({0, 1, 32, 14});
-	down.loop = false;
-	down.speed = 0.1f;
+	//// Move down
+	//down.frames.push_back({33, 1, 32, 14});
+	//down.frames.push_back({0, 1, 32, 14});
+	//down.loop = false;
+	//down.speed = 0.1f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -36,7 +37,7 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	graphics = App->textures->Load("rtype/ship.png");
+	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
 
 	destroyed = false;
 	position.x = 150;
@@ -108,7 +109,7 @@ update_status ModulePlayer::Update()
 
 	// Draw everything --------------------------------------
 	if(destroyed == false)
-		App->renderer->Blit(graphics, position.x, position.y, &(current_animation->GetCurrentFrame()));
+		App->renderer->Blit(graphics, position.x, position.y, &idleState);
 
 	return UPDATE_CONTINUE;
 }

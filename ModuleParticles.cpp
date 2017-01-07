@@ -85,7 +85,7 @@ update_status ModuleParticles::Update()
 		}
 		else
 		{
-			App->renderer->Blit(graphics, p->location.x, p->location.y, &(p->animation.GetCurrentFrame()), 1);
+			App->renderer->Blit(graphics, p->location.x, p->location.y, &(p->animation.GetCurrentFrame()));
 			++it;
 		}
 	}

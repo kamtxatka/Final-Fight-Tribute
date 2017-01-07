@@ -62,6 +62,8 @@ SDL_Texture* const ModuleTextures::Load(const char* path)
 	}
 	else
 	{
+		//esto elimina el color magenta de fondo
+		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format,255,  0, 255)); 
 		texture = SDL_CreateTextureFromSurface(App->renderer->renderer, surface);
 
 		if(texture == nullptr)

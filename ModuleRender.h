@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Globals.h"
 
+#define CAMERA_SPEED 4
+
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
@@ -21,7 +23,12 @@ public:
 	bool CleanUp();
 
 	bool Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed = 1.0f);
-	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
+	bool BlitStretch(SDL_Texture* texture, SDL_Rect* target, SDL_Rect* section, float speed = 1.0f);
+
+
+	//bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
+	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, float speed = 1.0f);
+
 
 public:
 	SDL_Renderer* renderer = nullptr;
