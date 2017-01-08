@@ -168,7 +168,7 @@ bool Particle::Update()
 void Particle::OnCollisionTrigger()
 {
 	LOG("particle colision");
-	App->collision->AddCollider({ SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 - 30, 10, 10 }, ENEMY_MASK, nullptr);
+	//App->collision->AddCollider({ SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 - 30, 10, 10 }, ENEMY_MASK, nullptr);
 	this->collider->to_delete = true;
 	this->to_delete = true;
 

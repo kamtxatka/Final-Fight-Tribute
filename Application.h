@@ -19,6 +19,7 @@ class ModulePlayer;
 class ModuleSceneIntro;
 class ModuleSceneSpace;
 class ModuleScene1_1;
+class ModuleObstacle;
 
 class Application
 {
@@ -43,6 +44,7 @@ public:
 
 	// Game modules ---
 	ModulePlayer* player;
+	ModuleObstacle* obstacles;
 	ModuleSceneIntro* scene_intro;
 	ModuleSceneSpace* scene_space;
 	ModuleScene1_1* scene1;

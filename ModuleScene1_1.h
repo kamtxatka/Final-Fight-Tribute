@@ -21,6 +21,11 @@ public:
 
 	SDL_Rect background;
 	SDL_Rect sky;
+	SDL_Rect skyBlit1;
+	SDL_Rect skyBlit2;
+	SDL_Rect skyBlit3;
+
+
 
 
 };

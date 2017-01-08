@@ -12,21 +12,8 @@
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
-	idleState = {91,3,45,86};
-	// idle animation (just the ship)
-	//idle.frames.push_back({66, 1, 32, 14});
-
-	//// move upwards
-	//up.frames.push_back({100, 1, 32, 14});
-	//up.frames.push_back({132, 0, 32, 14});
-	//up.loop = false;
-	//up.speed = 0.1f;
-
-	//// Move down
-	//down.frames.push_back({33, 1, 32, 14});
-	//down.frames.push_back({0, 1, 32, 14});
-	//down.loop = false;
-	//down.speed = 0.1f;
+	groundedIdleState = {91,3,45,86};
+	
 }
 
 ModulePlayer::~ModulePlayer()
@@ -39,9 +26,15 @@ bool ModulePlayer::Start()
 
 	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
 
-	destroyed = false;
+	dead = false;
 	position.x = 150;
 	position.y = 120;
+	speed = 1;
+	float horizontalInput = 0;
+	float verticalInput = 0;
+	bool jumpInput = false;
+	bool attackInput = false;
+	currentIdleState = &groundedIdleState;
 
 	collider = App->collision->AddCollider({ position.x, position.y ,30, 14}, PLAYER_MASK, nullptr);
 
@@ -61,41 +54,21 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	int speed = 1;
+	//if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	//{
+	//	position.y += speed;
+	//	collider->rect.y = position.y;
+	//	if(current_animation != &down)
+	//	{
+	//		down.Reset();
+	//		current_animation = &down;
+	//	}
+	//}
 
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-	{
-		position.x -= speed;
-		collider->rect.x = position.x;
-	}
+	CheckInputs();
+	
+	Move();
 
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-	{
-		position.x += speed;
-		collider->rect.x = position.x;
-	}
-
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-	{
-		position.y += speed;
-		collider->rect.y = position.y;
-		if(current_animation != &down)
-		{
-			down.Reset();
-			current_animation = &down;
-		}
-	}
-
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-	{
-		position.y -= speed;
-		collider->rect.y = position.y;
-		if(current_animation != &up)
-		{
-			up.Reset();
-			current_animation = &up;
-		}
-	}
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
@@ -103,19 +76,69 @@ update_status ModulePlayer::Update()
 		App->particles->AddParticle(App->particles->laserShot, position.x+ 40, position.y);
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_IDLE
-	   && App->input->GetKey(SDL_SCANCODE_W) == KEY_IDLE)
-		current_animation = &idle;
 
 	// Draw everything --------------------------------------
-	if(destroyed == false)
-		App->renderer->Blit(graphics, position.x, position.y, &idleState);
+	if(dead == false)
+		App->renderer->Blit(graphics, position.x, position.y, currentIdleState);
 
 	return UPDATE_CONTINUE;
 }
 
-// TODO 13: Make so is the laser collides, it is removed and create an explosion particle at its position
 
-// TODO 14: Make so if the player collides, it is removed and create few explosions at its positions
-// then fade away back to the first screen (use the "destroyed" bool already created 
-// You will need to create, update and destroy the collider with the player
+void ModulePlayer::CheckInputs()
+{
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		horizontalInput -= speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		horizontalInput += speed;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		verticalInput -= speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		verticalInput += speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN)
+		attackInput = true;
+	else
+		attackInput = false;
+
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+		jumpInput = true;
+	else
+		jumpInput = false;
+}
+
+
+void ModulePlayer::Move()
+{
+	if (horizontalInput)
+	{
+		position.x += (int)horizontalInput;
+		collider->rect.x = position.x;
+		horizontalInput = 0;
+	}
+	if (verticalInput)
+	{
+		position.y += (int)verticalInput;
+		collider->rect.y = position.y;
+		verticalInput = 0;
+	}
+}
+
+void ModulePlayer::Jump()
+{
+}
+
+void ModulePlayer::Attack()
+{
+	//
+	if (true)
+	{
+
+	}
+
+}
+
+bool ModulePlayer::Grounded()
+{
+	return false;
+}

@@ -8,6 +8,7 @@
 #include "ModuleCollision.h"
 #include "ModuleParticles.h"
 
+#include "ModuleObstacle.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleSceneSpace.h"
 #include "ModuleScene1_1.h"
@@ -24,6 +25,7 @@ Application::Application()
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(audio = new ModuleAudio());
+	modules.push_back(obstacles = new ModuleObstacle());
 
 	// Game Modules
 	modules.push_back(scene_intro = new ModuleSceneIntro(false));

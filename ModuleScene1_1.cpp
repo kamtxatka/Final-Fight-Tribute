@@ -6,20 +6,21 @@
 #include "ModulePlayer.h"
 #include "ModuleCollision.h"
 #include "ModuleParticles.h"
+#include "ModuleObstacle.h"
 #include "ModuleScene1_1.h"
 
 
 ModuleScene1_1::ModuleScene1_1(bool active): Module(active)
 {
-	background.x = 64;
-	background.y = 0;
-	background.w = 1296;
-	background.h = 257;
+	background = { 94, 0, 1296, 257 };
 
-	sky.x = 3;
-	sky.y = 0;
-	sky.w = 256;
-	sky.h = 150;
+	sky = { 3, 0, 256, 150 };
+	skyBlit1 = { 0, -20,256,200 };
+	skyBlit2 = { 450, -20,256,200 };
+	skyBlit3 = { 780, -20,256,200 };
+
+	//barrel = { 30, 178, 32, 62 };
+
 
 }
 
@@ -38,6 +39,12 @@ bool ModuleScene1_1::Start()
 	App->collision->Enable();
 
 	App->audio->PlayMusic("Audio/GoAhead.ogg", 1.0f);
+
+	App->obstacles->AddObstacle(App->obstacles->barrrel, { 100, 100 });
+	App->obstacles->AddObstacle(App->obstacles->barrrel, { 50, 100 });
+
+
+	//barrel = &(App->obstacles->barrel);
 
 	return true;
 }
@@ -59,16 +66,13 @@ bool ModuleScene1_1::CleanUp()
 
 update_status ModuleScene1_1::Update()
 {
+	//App->renderer->BlitStretch(skygraphics, &skyBlit1, &sky, 0.75f);
+	App->renderer->BlitStretch(skygraphics, &skyBlit2, &sky, 0.75f);
+	App->renderer->BlitStretch(skygraphics, &skyBlit3, &sky, 0.75f);
 
-	/*App->renderer->Blit(skygraphics, 0, 0, &sky, 4.0f);
-	App->renderer->Blit(skygraphics, 650, 0, &sky, 4.0f);
-	App->renderer->Blit(skygraphics, 1050, 0, &sky, 4.0f);*/
+	//App->renderer->Blit(backgroundgraphics, 0, -15, &background);
 
-	App->renderer->BlitStretch(skygraphics, new SDL_Rect{ 0, -20,256,200 }, &sky, 0.75f);
-	App->renderer->BlitStretch(skygraphics, new SDL_Rect{ 450, -20,256,200 }, &sky, 0.75f);
-	App->renderer->BlitStretch(skygraphics, new SDL_Rect{ 780, -20,256,200 }, &sky, 0.75f);
-
-	App->renderer->Blit(backgroundgraphics, 0, -15, &background);
+	//App->renderer->Blit(App->obstacles->graphics, 100, 100, barrel);
 
 
 	return UPDATE_CONTINUE;
