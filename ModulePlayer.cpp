@@ -28,7 +28,10 @@ bool ModulePlayer::Start()
 
 	dead = false;
 	position.x = 150;
-	position.y = 120;
+	//position.y = 120;
+	position.y = SCREEN_HEIGHT / 2;
+	position.z = 0;
+	depth = 40;
 	speed = 1;
 	float horizontalInput = 0;
 	float verticalInput = 0;
@@ -36,7 +39,7 @@ bool ModulePlayer::Start()
 	bool attackInput = false;
 	currentIdleState = &groundedIdleState;
 
-	collider = App->collision->AddCollider({ position.x, position.y ,30, 14}, PLAYER_MASK, nullptr);
+	collider = App->collision->AddCollider({ position.x, position.y ,30, 14}, position.z, depth, PLAYER_MASK, nullptr);
 
 	return true;
 }
@@ -54,32 +57,74 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	//if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-	//{
-	//	position.y += speed;
-	//	collider->rect.y = position.y;
-	//	if(current_animation != &down)
-	//	{
-	//		down.Reset();
-	//		current_animation = &down;
-	//	}
-	//}
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+	{
+		position.x -= speed;
+		collider->rect.x = position.x;
+	}
 
-	CheckInputs();
-	
-	Move();
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+	{
+		position.x += speed;
+		collider->rect.x = position.x;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	{
+		position.z += speed;
+		collider->z = position.z;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
+		position.z -= speed;
+		collider->z = position.z;
+	}
 
 
-	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+	{
+		position.y -= speed;
+		collider->rect.y = position.y;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT)
+	{
+		position.y += speed;
+		collider->rect.y = position.y;
+	}
+
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		// TODO 6: Shoot a laser using the particle system
-		App->particles->AddParticle(App->particles->laserShot, position.x+ 40, position.y);
+		iPoint location = { position.x + 40, position.y, position.z };
+		App->particles->AddParticle(App->particles->laserShot, location);
 	}
 
 
 	// Draw everything --------------------------------------
-	if(dead == false)
-		App->renderer->Blit(graphics, position.x, position.y, currentIdleState);
+	if (dead == false)
+		App->renderer->Blit(graphics, position, currentIdleState);
+
+	
+	
+	
+	//CheckInputs();
+	//
+	//Move();
+
+
+	//if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	//{
+	//	// TODO 6: Shoot a laser using the particle system
+	//	App->particles->AddParticle(App->particles->laserShot, position.x+ 40, position.y);
+	//}
+
+
+	//// Draw everything --------------------------------------
+	//if(dead == false)
+	//	App->renderer->Blit(graphics, position.x, position.y, currentIdleState);
 
 	return UPDATE_CONTINUE;
 }

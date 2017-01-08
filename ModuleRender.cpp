@@ -85,27 +85,26 @@ bool ModuleRender::CleanUp()
 }
 
 // Blit to screen
-bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed)
+bool ModuleRender::Blit(SDL_Texture* texture, iPoint coordinates, SDL_Rect* section, float speed)
 {
 	bool ret = true;
 	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * SCREEN_SIZE;
-	rect.y = (int)(camera.y * speed) + y * SCREEN_SIZE;
+	rect.x = (int)(camera.x * speed) + coordinates.x * SCREEN_SIZE;
 
-	if(section != NULL)
+	if (section != NULL)
 	{
 		rect.w = section->w;
 		rect.h = section->h;
 	}
 	else
-	{
 		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
-	}
+
+	rect.y = (int)(camera.y * speed) + (coordinates.y - rect.h + coordinates.z) * SCREEN_SIZE;
 
 	rect.w *= SCREEN_SIZE;
 	rect.h *= SCREEN_SIZE;
 
-	if(SDL_RenderCopy(renderer, texture, section, &rect) != 0)
+	if (SDL_RenderCopy(renderer, texture, section, &rect) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		ret = false;
@@ -146,7 +145,9 @@ bool ModuleRender::BlitStretch(SDL_Texture * texture, SDL_Rect * target, SDL_Rec
 	return ret;
 }
 
-bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, float speed)
+// it prints 2 quads. a rectangle on min Z of the collider and another rectangle on max Z of the collider
+// (0,0,0) of a cube is on its top, left, back corner
+bool ModuleRender::DrawQuad(const SDL_Rect& rect, const int& z, const int& depth, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	bool ret = true;
 
@@ -154,20 +155,36 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
 	SDL_Rect rec(rect);
-	/*if (use_camera)
-	{
-	}*/
 
-	rec.x = (int)(camera.x * speed) + rect.x * SCREEN_SIZE;
-	rec.y = (int)(camera.y * speed) + rect.y * SCREEN_SIZE;
+	rec.x = (int)(camera.x + rect.x * SCREEN_SIZE);
+	rec.y = (int)(camera.y + (rect.y - rect.h + z) * SCREEN_SIZE);
+
+	int recty2 = (int)(camera.y + (rect.y - rect.h + z - depth) * SCREEN_SIZE);
 	rec.w *= SCREEN_SIZE;
 	rec.h *= SCREEN_SIZE;
+
 
 	if (SDL_RenderFillRect(renderer, &rec) != 0)
 	{
 		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
 		ret = false;
 	}
+	//first quad drawn
+
+	//second quad goes on max Z so we have to add depth
+
+	/*rec.y = (int)(camera.y + (rect.y + z - depth) * SCREEN_SIZE);*/
+
+	SDL_Rect rect2 = { rec.x, recty2,rec.w,rec.h };
+
+
+	if (SDL_RenderFillRect(renderer, &rect2) != 0)
+	{
+		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
+		ret = false;
+	}
+
+
 
 	return ret;
 }

@@ -27,6 +27,7 @@ bool ModuleObstacle::Start()
 	barrrel.collider = nullptr;
 	barrrel.destructible = false;
 	barrrel.location = {0,0};
+	barrrel.depth = 5;
 	barrrel.rect = { 30, 178, 32, 62 };
 	barrrel.to_delete = false;
 	barrrel.collisionMask = OBSTACLE_MASK;
@@ -63,7 +64,7 @@ update_status ModuleObstacle::Update()
 		}
 		else
 		{
-			App->renderer->Blit(graphics, p->location.x, p->location.y, &(p->rect));
+			App->renderer->Blit(graphics, p->location, &(p->rect));
 			++it;
 		}
 	}
@@ -76,10 +77,12 @@ void ModuleObstacle::AddObstacle(const Obstacle & prefab, iPoint location)
 	Obstacle* ob = new Obstacle(prefab);
 	ob->location = location;
 
-	ob->collider = App->collision->AddCollider(ob->rect, ob->collisionMask, std::bind(&Obstacle::OnCollisionTrigger, ob));
-	ob->collider->SetPos(location.x, location.y);
+	ob->collider = App->collision->AddCollider(ob->rect, ob->depth, ob->location.z, ob->collisionMask,
+		std::bind(&Obstacle::OnCollisionTrigger, ob));
+	ob->collider->SetPos(location.x, location.y, location.z);
 
 	active.push_back(ob);
+
 }
 
 Obstacle::Obstacle(){}
@@ -89,6 +92,7 @@ Obstacle::Obstacle(const Obstacle& ob)
 	this->collisionMask = ob.collisionMask;
 	this->destructible = ob.destructible;
 	this->location = ob.location;
+	this->depth = ob.depth;
 	this->rect = ob.rect;
 	this->to_delete = ob.to_delete;
 	//falta collider

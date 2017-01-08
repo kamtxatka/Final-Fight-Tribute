@@ -10,31 +10,33 @@ class Point
 {
 public:
 
-	TYPE x, y;
+	TYPE x, y, z;
 
 	Point()
 	{}
-	Point(TYPE x, TYPE y) : x(x), y(y)
+	Point(TYPE x, TYPE y, TYPE z) : x(x), y(y), z(z)
+	{}
+
+	//we addd this constructor so we dont have to change all the calls to point
+	Point(TYPE x, TYPE y) : x(x), y(y), z(0)
 	{}
 
 	// Operators ------------------------------------------------
 	Point operator -(const Point &v) const
 	{
-		p2Vector2 r;
-
+		Point<TYPE> r;
 		r.x = x - v.x;
 		r.y = y - v.y;
-
+		r.z = z - v.z;
 		return(r);
 	}
 
 	Point operator + (const Point &v) const
 	{
-		p2Vector2 r;
-
+		Point<TYPE> r;
 		r.x = x + v.x;
 		r.y = y + v.y;
-
+		r.z = z + v.z;
 		return(r);
 	}
 
@@ -42,7 +44,7 @@ public:
 	{
 		x -= v.x;
 		y -= v.y;
-
+		z -= v.z;
 		return(*this);
 	}
 
@@ -50,29 +52,29 @@ public:
 	{
 		x += v.x;
 		y += v.y;
-
+		z += v.z;
 		return(*this);
 	}
 
 	bool operator ==(const Point& v) const
 	{
-		return (x == v.x && y == v.y);
+		return (x == v.x && y == v.y && z == v.z);
 	}
 
 	bool operator !=(const Point& v) const
 	{
-		return (x != v.x || y != v.y);
+		return (x != v.x || y != v.y || z != v.z);
 	}
 
 	// Utils ------------------------------------------------
 	bool IsZero() const
 	{
-		return (x == 0 && y == 0);
+		return (x == 0 && y == 0 && z == 0);
 	}
 
 	Point& SetToZero()
 	{
-		x = y = 0;
+		x = y = z = 0;
 		return(*this);
 	}
 
@@ -80,7 +82,7 @@ public:
 	{
 		x = -x;
 		y = -y;
-
+		z = -z;
 		return(*this);
 	}
 
@@ -89,8 +91,9 @@ public:
 	{
 		TYPE fx = x - v.x;
 		TYPE fy = y - v.y;
+		TYPE fz = z - v.z;
 
-		return sqrt((fx*fx) + (fy*fy));
+		return sqrt((fx*fx) + (fy*fy) + (fz*fz));
 	}
 };
 

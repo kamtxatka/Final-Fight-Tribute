@@ -20,6 +20,8 @@ enum CollisionMask
 struct Collider
 {
 	SDL_Rect rect = { 0,0,0,0 };
+	int z = 0;
+	int depth = 0;
 	bool to_delete = false;
 	CollisionMask  collisionMask = DEFAULT_MASK;
 	std::function<void()> OnCollisionCallback = nullptr;
@@ -30,16 +32,18 @@ struct Collider
 	void OnCollisionTrigger(const Collider& otherCollider) const;
 
 
-	Collider(SDL_Rect rectangle, std::function<void()> OnCollisionCallback) : rect(rectangle), OnCollisionCallback(OnCollisionCallback)
+	Collider(SDL_Rect rectangle, int z, int depth, std::function<void()> OnCollisionCallback) :
+		rect(rectangle), z(z), depth(depth), OnCollisionCallback(OnCollisionCallback)
 	{}
 
-	void SetPos(int x, int y)
+	void SetPos(int x, int y, int z = 0)
 	{
 		rect.x = x;
 		rect.y = y;
+		z = z;
 	}
 
-	bool CheckCollision(const SDL_Rect& r) const;
+	bool CheckCollision(const SDL_Rect& r, const int& z, const int& depth) const;
 };
 
 class ModuleCollision : public Module
@@ -54,7 +58,9 @@ public:
 
 	bool CleanUp();
 
-	Collider* AddCollider(const SDL_Rect& rect, const CollisionMask collisionMask, std::function<void()> OnCollisionCallback);
+	Collider* AddCollider(const SDL_Rect& rect, const int& z, const int& depth,
+		const CollisionMask collisionMask, std::function<void()> OnCollisionCallback);
+
 	void DebugDraw();
 	bool CheckCollisionMasks(const CollisionMask mask, const CollisionMask otherMask) const;
 

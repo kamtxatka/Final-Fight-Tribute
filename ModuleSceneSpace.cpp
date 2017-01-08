@@ -29,11 +29,11 @@ bool ModuleSceneSpace::Start()
 
 	App->audio->PlayMusic("rtype/stage1.ogg", 1.0f);
 
-	App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 30, 10, 10 }, ENEMY_MASK, nullptr);
-	App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 15, 10, 10 }, ENEMY_ATTACK_MASK, nullptr);
-	App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 10, 10 }, OBSTACLE_MASK, nullptr);
-	App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 15, 10, 10 }, WALL_MASK, nullptr);
-	App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 30, 10, 10 }, PLAYER_MASK, nullptr);
+	//App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 30, 10, 10 }, ENEMY_MASK, nullptr);
+	//App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 15, 10, 10 }, ENEMY_ATTACK_MASK, nullptr);
+	App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 10, 10 }, 0, 10, OBSTACLE_MASK, nullptr);
+	//App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 15, 10, 10 }, WALL_MASK, nullptr);
+	//App->collision->AddCollider({ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 30, 10, 10 }, PLAYER_MASK, nullptr);
 
 
 	
@@ -48,7 +48,7 @@ bool ModuleSceneSpace::CleanUp()
 {
 	LOG("Unloading space scene");
 
- 	App->textures->Unload(background);
+	App->textures->Unload(background);
 	App->player->Disable();
 	App->collision->Disable();
 	App->particles->Disable();
@@ -66,7 +66,7 @@ update_status ModuleSceneSpace::Update()
 	//App->renderer->camera.x -= 3;
 	
 	// Draw everything --------------------------------------
-	App->renderer->Blit(background, 0, 0, NULL);
-	
+	App->renderer->Blit(background, { 0,0,0 }, NULL);
+
 	return UPDATE_CONTINUE;
 }

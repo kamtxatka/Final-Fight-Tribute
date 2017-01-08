@@ -27,11 +27,12 @@ bool ModuleParticles::Start()
 	// coords: {232, 103, 16, 12}; {249, 103, 16, 12};
 	laserShot.animation.frames.push_back({ 232, 103, 16, 12 });
 	laserShot.animation.frames.push_back({ 249, 103, 16, 12 });
-	laserShot.location = { 100, 100 };
+	laserShot.location = { 100, 100, 0 };
+	laserShot.depth = 5;
 	laserShot.direction = { 5, 0 };
 	laserShot.framesAlive = 0;
 	laserShot.framesLive = 40;
- 	laserShot.audioFxIndex = App->audio->LoadFx("rtype/laser.wav");
+	laserShot.audioFxIndex = App->audio->LoadFx("rtype/laser.wav");
 	laserShot.collider = nullptr;
 	laserShot.collisionMask = PLAYER_ATTACK_MASK;
 
@@ -46,6 +47,7 @@ bool ModuleParticles::Start()
 	explosion.animation.frames.push_back({ 419, 296, 33, 30 });
 	explosion.animation.frames.push_back({ 457, 296, 33, 30 });
 	explosion.location = { 50, 100 };
+	explosion.depth = 5;
 	explosion.direction = { 0, 0 };
 	explosion.framesAlive = 0;
 	explosion.framesLive = 20;
@@ -85,7 +87,7 @@ update_status ModuleParticles::Update()
 		}
 		else
 		{
-			App->renderer->Blit(graphics, p->location.x, p->location.y, &(p->animation.GetCurrentFrame()));
+			App->renderer->Blit(graphics, p->location, &(p->animation.GetCurrentFrame()), 1);
 			++it;
 		}
 	}
@@ -93,19 +95,20 @@ update_status ModuleParticles::Update()
 	return UPDATE_CONTINUE;
 }
 
-void ModuleParticles::AddParticle(const Particle& prefab, int x, int y)
+void ModuleParticles::AddParticle(const Particle& prefab, iPoint& location)
 {
 	// TODO 4: Fill in a method to create an instance of a prototype particle	
 
 	Particle* p = new Particle(prefab);
-	p->location = { x, y };
-	
+	p->location = location;
+
 	//una vez añadida le ponemos la particula. w y h seran los de la animacion pero la x y hay que ponerl la misma que la particula
-	p->collider = App->collision->AddCollider({ p->animation.GetCurrentFrame() }, 
+	p->collider = App->collision->AddCollider({ p->animation.GetCurrentFrame() }, p->location.z, p->depth,
 		p->collisionMask, std::bind(&Particle::OnCollisionTrigger, p));
 
-	p->collider->rect.x = x + p->direction.x;
-	p->collider->rect.y = y + p->direction.y;
+	p->collider->rect.x = p->location.x + p->direction.x;
+	p->collider->rect.y = p->location.y + p->direction.y;
+	p->collider->z = p->location.z + p->direction.z;
 
 	active.push_back(p);
 }
@@ -121,6 +124,7 @@ Particle::Particle(const Particle& p)
 {
 	this->animation = p.animation;
 	//this->location = p.location;
+	this->depth = p.depth;
 	this->direction = p.direction;
 	this->framesLive = p.framesLive;
 	this->framesAlive = 0;
@@ -160,6 +164,7 @@ bool Particle::Update()
 	{
 		collider->rect.x = this->location.x + direction.x;
 		collider->rect.y = this->location.y + direction.y;
+		collider->z = this->location.z + direction.z;
 	}
 
 	return ret;
@@ -168,9 +173,8 @@ bool Particle::Update()
 void Particle::OnCollisionTrigger()
 {
 	LOG("particle colision");
-	//App->collision->AddCollider({ SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 - 30, 10, 10 }, ENEMY_MASK, nullptr);
+	//App->collision->AddCollider({ SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 - 30, 10, 10 }, 0, 0, ENEMY_MASK, nullptr);
 	this->collider->to_delete = true;
 	this->to_delete = true;
-
 }
 

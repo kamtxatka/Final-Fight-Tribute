@@ -24,14 +24,14 @@ public:
 
 	bool Start();
 	update_status Update();
+	bool CleanUp();
+
 	void CheckInputs();
 	void Move();
 	void Jump();
 	void Attack();
 	bool Grounded();
-	bool CleanUp();
-	CharacterState currentState = IDLE;
-	CharacterState oldState = IDLE;
+	
 
 public:
 
@@ -42,8 +42,10 @@ public:
 	SDL_Rect airIdleState;
 	SDL_Rect kickIleState;
 
-
-	iPoint position;
+	CharacterState currentState = IDLE;
+	CharacterState oldState = IDLE;
+	iPoint position = { 0,0,0 };
+	int depth = 0;
 	bool dead = false;
 	Collider* collider = nullptr;
 	int speed = 0;

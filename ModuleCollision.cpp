@@ -59,10 +59,10 @@ update_status ModuleCollision::Update()
 			if (CheckCollisionMasks((*it1)->collisionMask,(*it2)->collisionMask))
 			{
 				//if so, do they collide?
-				if ((*it1)->CheckCollision((*it2)->rect))
+				if ((*it1)->CheckCollision((*it2)->rect, (*it2)->z, (*it2)->depth))
 				{
 					(*it1)->OnCollisionTrigger(**it2);
-					//(*it2)->OnCollisionTrigger(**it1);
+					(*it2)->OnCollisionTrigger(**it1);
 				}
 			}
 		}
@@ -84,26 +84,26 @@ void ModuleCollision::DebugDraw()
 		switch ((*it)->collisionMask)
 		{
 		case PLAYER_MASK:
-			App->renderer->DrawQuad((*it)->rect, 255, 250, 250, 150);
+			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 50);
 			break;
-		case PLAYER_ATTACK_MASK:
+			/*case PLAYER_ATTACK_MASK:
 			App->renderer->DrawQuad((*it)->rect, 255, 250, 250, 200);
 			break;
-		case ENEMY_MASK:
+			case ENEMY_MASK:
 			App->renderer->DrawQuad((*it)->rect, 255, 0, 0, 150);
 			break;
-		case ENEMY_ATTACK_MASK:
+			case ENEMY_ATTACK_MASK:
 			App->renderer->DrawQuad((*it)->rect, 255, 0, 0, 200);
-			break;
+			break;*/
 		case OBSTACLE_MASK:
-			App->renderer->DrawQuad((*it)->rect, 0, 250, 0, 150);
+			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 0, 250, 0, 50);
 			break;
-		case WALL_MASK:
+			/*case WALL_MASK:
 			App->renderer->DrawQuad((*it)->rect, 0, 250, 0, 200);
 			break;
-		default:
+			default:
 			App->renderer->DrawQuad((*it)->rect, 255, 250, 250, 150);
-			break;
+			break;*/
 		}
 
 	}
@@ -145,9 +145,10 @@ bool ModuleCollision::CleanUp()
 	return true;
 }
 
-Collider* ModuleCollision::AddCollider(const SDL_Rect& rect, const CollisionMask collisionMask, std::function<void()> OnCollisionCallback)
+Collider* ModuleCollision::AddCollider(const SDL_Rect& rect, const int& z, const int& depth,
+	const CollisionMask collisionMask, std::function<void()> OnCollisionCallback)
 {
-	Collider* ret = new Collider(rect, OnCollisionCallback);
+	Collider* ret = new Collider(rect, z, depth, OnCollisionCallback);
 	ret->collisionMask = collisionMask;
 
 	colliders.push_back(ret);
@@ -157,46 +158,46 @@ Collider* ModuleCollision::AddCollider(const SDL_Rect& rect, const CollisionMask
 
 // -----------------------------------------------------
 
-bool Collider::CheckCollision(const SDL_Rect& otherRect) const
+bool Collider::CheckCollision(const SDL_Rect& otherRect, const int& z, const int& depth) const
 {
 	// TODO 7: Create by hand (avoid consulting the internet) a simple collision test
 	// Return true if the argument and the own rectangle are intersecting
-	
+
 	bool ret = true;
 
-	int LWall = rect.x;
-	int RWall = rect.x + rect.w;
-	int TWall = rect.y;
-	int DWall = rect.y + rect.h;
+	int LWall = this->rect.x;
+	int RWall = this->rect.x + this->rect.w;
+	int TWall = this->rect.y - this->rect.h;
+	int DWall = this->rect.y;
+	int FPoint = this->z;
+	int BPoint = this->z - this->depth;
 
 	int otherLWall = otherRect.x;
 	int otherRWall = otherRect.x + otherRect.w;
-	int otherTWall = otherRect.y;
-	int otherDWall = otherRect.y + otherRect.h;
+	int otherTWall = otherRect.y - otherRect.h;
+	int otherDWall = otherRect.y;
+	int otherFPoint = z;
+	int otherBPoint = z - depth;
 
 
-	if ((LWall > otherRWall) || (RWall < otherLWall))
+	if ((BPoint > otherFPoint) || (FPoint < otherBPoint))
 		ret = false;
-	else 
-	{
-		if ((DWall < otherTWall) || (TWall > otherDWall))
-			ret = false;
-	}
+	else if ((LWall > otherRWall) || (RWall < otherLWall))
+		ret = false;
+	else if ((DWall < otherTWall) || (TWall > otherDWall))
+		ret = false;
+	//}
 	return ret;
 }
 
 
 void Collider::OnCollisionTrigger(const Collider & otherCollider) const
 {
-	
-	App->renderer->DrawQuad(rect, 255, 250, 250, 255);
-	App->renderer->DrawQuad(otherCollider.rect, 255, 250, 250, 255);
+	App->renderer->DrawQuad(rect, z, 0, 255, 250, 250, 255);
+	//App->renderer->DrawQuad(otherCollider.rect, 255, 250, 250, 255);
 
 	if (this->OnCollisionCallback != nullptr)
 		this->OnCollisionCallback();
-	if (otherCollider.OnCollisionCallback != nullptr)
-		otherCollider.OnCollisionCallback();
-
-
-
+	/*if (otherCollider.OnCollisionCallback != nullptr)
+	otherCollider.OnCollisionCallback();*/
 }

@@ -5,17 +5,15 @@
 #include "Module.h"
 
 
-
-
 struct Obstacle
 {
 	bool to_delete = false;
 	bool destructible = false;
 	iPoint location = { 0,0 };
+	int depth = 0;
 	SDL_Rect rect = { 0,0,0,0 };
 	Collider* collider = nullptr;
 	CollisionMask collisionMask = OBSTACLE_MASK;
-
 
 	Obstacle();
 	Obstacle(const Obstacle& p);
@@ -43,10 +41,6 @@ private:
 
 public:
 	Obstacle barrrel;
-
-
-
-
 
 	SDL_Rect barrel;
 };

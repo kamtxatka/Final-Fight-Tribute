@@ -9,7 +9,6 @@ public:
 	bool loop = true;
 	float speed = 1.0f;
 	vector<SDL_Rect> frames;
-	vector<int> offsets;
 
 private:
 	float current_frame = 0.0f;
@@ -34,14 +33,6 @@ public:
 		} 
 
 		return frames[(int)current_frame];
-	}
-
-	int GetCurrentOffset()
-	{
-		if (offsets.empty())
-			return offsets[(int)current_frame];
-		else 
-			return 0;
 	}
 
 	bool Finished() const

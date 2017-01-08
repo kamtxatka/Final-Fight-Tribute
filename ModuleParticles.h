@@ -17,6 +17,7 @@ struct Particle
 	// TODO 1: Fill in the structure with all the properties you need for each particle
 	Animation animation;
 	iPoint location;
+	int depth;
 	iPoint direction;
 	int framesLive;
 	int framesAlive;
@@ -44,7 +45,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	void AddParticle(const Particle& particle, int x, int y); // feel free to expand this call
+	void AddParticle(const Particle& particle, iPoint& location); // feel free to expand this call
 
 private:
 
