@@ -11,9 +11,7 @@
 
 
 ModuleObstacle::ModuleObstacle()
-{
-	barrel = { 30, 178, 32, 62 };
-}
+{}
 
 ModuleObstacle::~ModuleObstacle()
 {
@@ -24,13 +22,13 @@ bool ModuleObstacle::Start()
 	LOG("Loading obstacles");
 	graphics = App->textures->Load("Sprites/Itemst.gif");
 
-	barrrel.collider = nullptr;
-	barrrel.destructible = false;
-	barrrel.location = {0,0};
-	barrrel.depth = 5;
-	barrrel.rect = { 30, 178, 32, 62 };
-	barrrel.to_delete = false;
-	barrrel.collisionMask = OBSTACLE_MASK;
+	barrel.collider = nullptr;
+	barrel.destructible = false;
+	barrel.location = {0,0};
+	barrel.depth = 5;
+	barrel.rect = { 30, 178, 32, 62 };
+	barrel.to_delete = false;
+	barrel.collisionMask = OBSTACLE_MASK;
 
 	return true;
 }
@@ -79,7 +77,7 @@ void ModuleObstacle::AddObstacle(const Obstacle & prefab, iPoint location)
 	Obstacle* ob = new Obstacle(prefab);
 	ob->location = location;
 
-	ob->collider = App->collision->AddCollider(ob->rect, ob->depth, ob->location.z, ob->collisionMask,
+	ob->collider = App->collision->AddCollider(ob->rect, ob->location.z, ob->depth, ob->collisionMask,
 		std::bind(&Obstacle::OnCollisionTrigger, ob));
 	ob->collider->SetPos(location.x, location.y, location.z);
 

@@ -27,10 +27,7 @@ bool ModulePlayer::Start()
 	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
 
 	dead = false;
-	position.x = 150;
-	//position.y = 120;
-	position.y = SCREEN_HEIGHT -10;
-	position.z = 0;
+	position = { 150, SCREEN_HEIGHT - STREET_DEPTH, 0 };
 	depth = 40;
 	speed = 1;
 	float horizontalInput = 0;

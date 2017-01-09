@@ -40,9 +40,7 @@ private:
 	std::list<Obstacle*> active;
 
 public:
-	Obstacle barrrel;
-
-	SDL_Rect barrel;
+	Obstacle barrel;
 };
 
 

@@ -40,7 +40,7 @@ struct Collider
 	{
 		rect.x = x;
 		rect.y = y;
-		z = z;
+		this->z = z;
 	}
 
 	bool CheckCollision(const SDL_Rect& r, const int& z, const int& depth) const;

@@ -19,9 +19,6 @@ ModuleScene1_1::ModuleScene1_1(bool active): Module(active)
 	skyBlit2 = { 450, -20,256,200 };
 	skyBlit3 = { 780, -20,256,200 };
 
-	//barrel = { 30, 178, 32, 62 };
-
-
 }
 
 ModuleScene1_1::~ModuleScene1_1()
@@ -39,11 +36,8 @@ bool ModuleScene1_1::Start()
 	App->collision->Enable();
 
 	App->audio->PlayMusic("Audio/GoAhead.ogg", 1.0f);
-	App->obstacles->AddObstacle(App->obstacles->barrrel, { 100, SCREEN_HEIGHT -15, 0 });
-	App->obstacles->AddObstacle(App->obstacles->barrrel, { 50, SCREEN_HEIGHT -15, 0 });
-
-
-	//barrel = &(App->obstacles->barrel);
+	App->obstacles->AddObstacle(App->obstacles->barrel, { 100, SCREEN_HEIGHT - STREET_DEPTH, 0 });
+	App->obstacles->AddObstacle(App->obstacles->barrel, { 50, SCREEN_HEIGHT - STREET_DEPTH, 0 });
 
 	return true;
 }

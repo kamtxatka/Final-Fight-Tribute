@@ -49,5 +49,6 @@ typedef unsigned int uint;
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Awesome Game"
+#define STREET_DEPTH 50
 
 #endif //__GLOBALS_H__
