@@ -64,7 +64,9 @@ update_status ModuleObstacle::Update()
 		}
 		else
 		{
-			App->renderer->Blit(graphics, p->location, &(p->rect));
+			//App->renderer->Blit(graphics, p->location, &(p->rect));
+			App->renderer->AddBlitCall(graphics, p->location, &(p->rect));
+
 			++it;
 		}
 	}

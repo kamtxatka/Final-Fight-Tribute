@@ -39,8 +39,8 @@ bool ModuleScene1_1::Start()
 	App->collision->Enable();
 
 	App->audio->PlayMusic("Audio/GoAhead.ogg", 1.0f);
-	App->obstacles->AddObstacle(App->obstacles->barrrel, { 100, SCREEN_HEIGHT / 2, 0 });
-	App->obstacles->AddObstacle(App->obstacles->barrrel, { 50, SCREEN_HEIGHT / 2, 0 });
+	App->obstacles->AddObstacle(App->obstacles->barrrel, { 100, SCREEN_HEIGHT -15, 0 });
+	App->obstacles->AddObstacle(App->obstacles->barrrel, { 50, SCREEN_HEIGHT -15, 0 });
 
 
 	//barrel = &(App->obstacles->barrel);
@@ -65,14 +65,10 @@ bool ModuleScene1_1::CleanUp()
 
 update_status ModuleScene1_1::Update()
 {
-	//App->renderer->BlitStretch(skygraphics, &skyBlit1, &sky, 0.75f);
+	App->renderer->BlitStretch(skygraphics, &skyBlit1, &sky, 0.75f);
 	App->renderer->BlitStretch(skygraphics, &skyBlit2, &sky, 0.75f);
 	App->renderer->BlitStretch(skygraphics, &skyBlit3, &sky, 0.75f);
-
-	//App->renderer->Blit(backgroundgraphics, 0, -15, &background);
-
-	//App->renderer->Blit(App->obstacles->graphics, 100, 100, barrel);
-
+	App->renderer->Blit(backgroundgraphics, { 0, SCREEN_HEIGHT +10, 0 }, &background);
 
 	return UPDATE_CONTINUE;
 }

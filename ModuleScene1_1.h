@@ -25,9 +25,6 @@ public:
 	SDL_Rect skyBlit2;
 	SDL_Rect skyBlit3;
 
-
-
-
 };
 
 #endif

@@ -29,7 +29,7 @@ bool ModulePlayer::Start()
 	dead = false;
 	position.x = 150;
 	//position.y = 120;
-	position.y = SCREEN_HEIGHT / 2;
+	position.y = SCREEN_HEIGHT -10;
 	position.z = 0;
 	depth = 40;
 	speed = 1;
@@ -105,7 +105,9 @@ update_status ModulePlayer::Update()
 
 	// Draw everything --------------------------------------
 	if (dead == false)
-		App->renderer->Blit(graphics, position, currentIdleState);
+		App->renderer->AddBlitCall(graphics, position, currentIdleState);
+
+	//App->renderer->Blit(graphics, position, currentIdleState);
 
 	
 	

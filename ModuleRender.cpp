@@ -61,11 +61,24 @@ update_status ModuleRender::Update()
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->renderer->camera.x -= CAMERA_SPEED;
 
+	//stackoverflow.com/questions/8121837/sorting-a-list-of-a-custom-type 
+	//anachronism used warning... ¿?
+
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleRender::PostUpdate()
 {
+	// blits calls should be here after all the logic is done, except for backgrounds
+
+	blitCallList.sort([](const BlitCall& a, const BlitCall& const b) { return a.location.z < b.location.z; });
+	for (std::list<BlitCall>::iterator it = blitCallList.begin(); it != blitCallList.end(); ++it)
+	{
+		Blit(it->texture, it->location, it->section, it->speed);
+	}
+
+	blitCallList.clear();
+
 	SDL_RenderPresent(renderer);
 	return UPDATE_CONTINUE;
 }
@@ -145,6 +158,12 @@ bool ModuleRender::BlitStretch(SDL_Texture * texture, SDL_Rect * target, SDL_Rec
 	return ret;
 }
 
+void ModuleRender::AddBlitCall(SDL_Texture * texture, iPoint location, SDL_Rect * section, float speed)
+{
+	blitCallList.push_back(BlitCall(texture, location, section, speed));
+}
+
+
 // it prints 2 quads. a rectangle on min Z of the collider and another rectangle on max Z of the collider
 // (0,0,0) of a cube is on its top, left, back corner
 bool ModuleRender::DrawQuad(const SDL_Rect& rect, const int& z, const int& depth, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
@@ -188,3 +207,4 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, const int& z, const int& depth
 
 	return ret;
 }
+
