@@ -31,6 +31,9 @@ public:
 	void Jump();
 	void Attack();
 	bool Grounded();
+
+
+	void InputManageForTesting();
 	
 
 public:
@@ -38,23 +41,29 @@ public:
 	SDL_Texture* graphics = nullptr;
 	Animation* current_animation = nullptr;
 	SDL_Rect* currentIdleState = nullptr;
-	SDL_Rect groundedIdleState;
-	SDL_Rect airIdleState;
-	SDL_Rect kickIleState;
+	SDL_Rect groundedIdleState = { 0,0,0 };
+	SDL_Rect groundedWalkingState = { 0,0,0 };
+	SDL_Rect airIdleState = { 0,0,0 };
+	SDL_Rect kickIdleState = { 0,0,0 };
+	SDL_Rect airKickIdleState = { 0,0,0 };
 
-	CharacterState currentState = IDLE;
-	CharacterState oldState = IDLE;
 	iPoint position = { 0,0,0 };
 	int depth = 0;
 	bool dead = false;
+	CharacterState currentState = IDLE;
+	CharacterState oldState = IDLE;
 	Collider* collider = nullptr;
-	int speed = 0;
 
 private:
-	float horizontalInput = 0;
-	float verticalInput = 0;
+	int horizontalInput = 0;
+	int verticalInput = 0;
 	bool jumpInput = false;
+	bool isJumping = false;
+	int jumpForce = 0;
 	bool attackInput = false;
+	bool isAttacking = false;
+	Uint32 timeBetweenAttacks = 0;
+	int speed = 0;
 };
 
 #endif

@@ -18,6 +18,10 @@ bool ModuleWindow::Init()
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
+
+	//if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
+	//in case we would want a timer with easy callback. lazy foo tuto 45
+
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());

@@ -14,7 +14,7 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{ad89cf24-f35e-4d0c-90e5-820c054c274d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Elements">
+    <Filter Include="Game Components">
       <UniqueIdentifier>{fddb5c4e-f5c9-4dbd-9e09-a73abb15b8e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -73,8 +73,20 @@
     <ClInclude Include="ModuleScene1_1.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="MovementSystem.h">
+      <Filter>Game Components</Filter>
+    </ClInclude>
     <ClInclude Include="ModuleObstacle.h">
-      <Filter>Game Modules</Filter>
+      <Filter>Core Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="HPSystem.h">
+      <Filter>Game Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackSystem.h">
+      <Filter>Game Components</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpSystem.h">
+      <Filter>Game Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +136,7 @@
       <Filter>Game Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleObstacle.cpp">
-      <Filter>Game Modules</Filter>
+      <Filter>Core Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

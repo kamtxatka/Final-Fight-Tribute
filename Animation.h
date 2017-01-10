@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ANIMATION_H__
+#define __ANIMATION_H__
 #include <vector>
 
 using namespace std;
@@ -45,3 +46,5 @@ public:
 		current_frame = 0.0f;
 	}
 };
+
+#endif
