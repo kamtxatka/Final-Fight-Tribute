@@ -72,6 +72,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AttackSystem.h" />
+    <ClInclude Include="CustomCounter.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="HPSystem.h" />
     <ClInclude Include="JumpSystem.h" />

@@ -88,6 +88,9 @@
     <ClInclude Include="JumpSystem.h">
       <Filter>Game Components</Filter>
     </ClInclude>
+    <ClInclude Include="CustomCounter.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

@@ -33,7 +33,7 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	jumpForce = 75;
 	attackInput = false;
 	isAttacking = false;
-	timeBetweenAttacks = 500;
+	timeBetweenAttacks = 100;
 	speed = 1;
 }
 
@@ -65,14 +65,14 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	
+
 	//InputManageForTesting();
 
 	CheckInputs();
 
 	Move();
 	Jump();
-	//Attack();
+	Attack();
 	
 	// Draw everything --------------------------------------
 	if (dead == false)
@@ -180,17 +180,17 @@ void ModulePlayer::Attack()
 			currentIdleState = &airKickIdleState;
 		else
 		{
-	//		attackTimer.Start();
-	//		currentIdleState = &kickIdleState;
-	//	}
-	//}
+			attackTimer.Start();
+			currentIdleState = &kickIdleState;
+		}
+	}
 
-	//if (isAttacking && !isJumping)
-	//{
-	//	if (attackTimer.GetTime() > timeBetweenAttacks)
-	//	{
-	//		attackTimer.Stop();
-	//		isAttacking = false;
+	if (isAttacking && !isJumping)
+	{
+		if (attackTimer.GetTime() > timeBetweenAttacks)
+		{
+			attackTimer.Stop();
+			isAttacking = false;
 		}
 	}
 

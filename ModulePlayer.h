@@ -5,6 +5,8 @@
 #include "Animation.h"
 #include "ModuleCollision.h"
 #include "Point.h"
+#include "CustomCounter.h"
+
 
 struct SDL_Texture;
 
@@ -46,6 +48,7 @@ public:
 	SDL_Rect airIdleState = { 0,0,0 };
 	SDL_Rect kickIdleState = { 0,0,0 };
 	SDL_Rect airKickIdleState = { 0,0,0 };
+	CustomCounter attackTimer = CustomCounter();
 
 	iPoint position = { 0,0,0 };
 	int depth = 0;
