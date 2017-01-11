@@ -5,6 +5,7 @@
 #include <set>
 #include <functional>
 #include "Module.h"
+#include "Point.h"
 
 enum CollisionMask
 {

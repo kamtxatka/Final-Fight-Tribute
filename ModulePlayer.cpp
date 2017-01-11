@@ -50,10 +50,9 @@ ModulePlayer::~ModulePlayer()
 bool ModulePlayer::Start()
 {
 	LOG("Loading player");
-
 	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
 
-	collider = App->collision->AddCollider({ position.x, position.y ,30, 14}, 
+	collider = App->collision->AddCollider({ position.x, position.y ,bodyWidth, 14}, 
 		position.z, depth, PLAYER_MASK, std::bind(&ModulePlayer::OnCollisionTrigger, this, std::placeholders::_1, std::placeholders::_2));
 
 	return true;
@@ -119,7 +118,8 @@ update_status ModulePlayer::Update()
 		if (!flipped)
 			App->renderer->AddBlitCall(graphics, position, currentIdleState);
 		else
-			App->renderer->AddBlitCall(graphics, {position.x + bodyWidth - currentIdleState->w, position.y, position.z}, currentIdleState, 1.0f, flipped);
+			App->renderer->AddBlitCall(graphics, {position.x + bodyWidth - currentIdleState->w, position.y, position.z}, 
+				currentIdleState, 1.0f, true);
 
 	}
 

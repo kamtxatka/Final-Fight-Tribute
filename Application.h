@@ -13,13 +13,14 @@ class ModuleAudio;
 class ModuleFadeToBlack;
 class ModuleCollision;
 class ModuleParticles;
+class ModuleObstacle;
+class ModuleEnemy;
 
 // Game modules ---
 class ModulePlayer;
 class ModuleSceneIntro;
 class ModuleSceneSpace;
 class ModuleScene1_1;
-class ModuleObstacle;
 
 class Application
 {
@@ -41,10 +42,11 @@ public:
 	ModuleFadeToBlack* fade;
 	ModuleCollision* collision;
 	ModuleParticles* particles;
+	ModuleObstacle* obstacles;
+	ModuleEnemy* enemies;
 
 	// Game modules ---
 	ModulePlayer* player;
-	ModuleObstacle* obstacles;
 	ModuleSceneIntro* scene_intro;
 	ModuleSceneSpace* scene_space;
 	ModuleScene1_1* scene1;

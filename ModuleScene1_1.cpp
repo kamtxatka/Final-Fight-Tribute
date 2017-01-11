@@ -7,6 +7,7 @@
 #include "ModuleCollision.h"
 #include "ModuleParticles.h"
 #include "ModuleObstacle.h"
+#include "ModuleEnemy.h"
 #include "ModuleScene1_1.h"
 
 
@@ -38,6 +39,8 @@ bool ModuleScene1_1::Start()
 	App->audio->PlayMusic("Audio/GoAhead.ogg", 1.0f);
 	App->obstacles->AddObstacle(App->obstacles->barrel, { 100, SCREEN_HEIGHT - STREET_DEPTH, 10 });
 	App->obstacles->AddObstacle(App->obstacles->barrel, { 20, SCREEN_HEIGHT - STREET_DEPTH, 0 });
+
+	App->enemies->AddEnemy(App->enemies->guy, { 50, SCREEN_HEIGHT - STREET_DEPTH, 0 });
 
 	return true;
 }
