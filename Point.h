@@ -103,6 +103,11 @@ public:
 		TYPE dy = std::abs(y);
 		TYPE dz = std::abs(z);
 
+		if ((dy < 5) && (dx < 5 || dz < 5))
+		{
+			dy = 50;
+		}
+
 		if (dx < dy && dx < dz)
 		{
 			y = 0;

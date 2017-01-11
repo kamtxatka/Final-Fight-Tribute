@@ -73,23 +73,14 @@
     <ClInclude Include="ModuleScene1_1.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
-    <ClInclude Include="MovementSystem.h">
-      <Filter>Game Components</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleObstacle.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
-    <ClInclude Include="HPSystem.h">
-      <Filter>Game Components</Filter>
-    </ClInclude>
-    <ClInclude Include="AttackSystem.h">
-      <Filter>Game Components</Filter>
-    </ClInclude>
-    <ClInclude Include="JumpSystem.h">
-      <Filter>Game Components</Filter>
-    </ClInclude>
     <ClInclude Include="CustomCounter.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEnemy.h">
+      <Filter>Core Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +130,9 @@
       <Filter>Game Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleObstacle.cpp">
+      <Filter>Core Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEnemy.cpp">
       <Filter>Core Modules</Filter>
     </ClCompile>
   </ItemGroup>

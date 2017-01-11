@@ -86,10 +86,10 @@ void ModuleCollision::DebugDraw()
 		case PLAYER_MASK:
 			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 50);
 			break;
-			/*case PLAYER_ATTACK_MASK:
-			App->renderer->DrawQuad((*it)->rect, 255, 250, 250, 200);
+			case PLAYER_ATTACK_MASK:
+			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 200);
 			break;
-			case ENEMY_MASK:
+			/*case ENEMY_MASK:
 			App->renderer->DrawQuad((*it)->rect, 255, 0, 0, 150);
 			break;
 			case ENEMY_ATTACK_MASK:
@@ -224,7 +224,7 @@ bool Collider::CheckCollision(const Collider* other) const
 		if (this->OnCollisionCallback != nullptr)
 			this->OnCollisionCallback(other->collisionMask, solapation);
 		if (other->OnCollisionCallback != nullptr)
-			other->OnCollisionCallback(other->collisionMask, solapation);
+			other->OnCollisionCallback(this->collisionMask, solapation);
 	}
 
 

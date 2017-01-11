@@ -71,15 +71,13 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="AttackSystem.h" />
     <ClInclude Include="CustomCounter.h" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="HPSystem.h" />
-    <ClInclude Include="JumpSystem.h" />
     <ClInclude Include="MemLeaks.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAudio.h" />
     <ClInclude Include="ModuleCollision.h" />
+    <ClInclude Include="ModuleEnemy.h" />
     <ClInclude Include="ModuleFadeToBlack.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleObstacle.h" />
@@ -91,7 +89,6 @@
     <ClInclude Include="ModuleSceneSpace.h" />
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
-    <ClInclude Include="MovementSystem.h" />
     <ClInclude Include="Point.h" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +97,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
     <ClCompile Include="ModuleCollision.cpp" />
+    <ClCompile Include="ModuleEnemy.cpp" />
     <ClCompile Include="ModuleFadeToBlack.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleObstacle.cpp" />

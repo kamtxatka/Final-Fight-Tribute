@@ -105,6 +105,9 @@ Obstacle::~Obstacle()
 bool Obstacle::Update()
 {
 	bool ret = true;
+
+	if (to_delete)
+		ret = false;
 	//not much here...
 	return ret;
 }
@@ -112,10 +115,11 @@ bool Obstacle::Update()
 void Obstacle::OnCollisionTrigger(CollisionMask collisionMask, iPoint collidedFrom)
 {
 	//LOG("Obstacle colision");
-	//App->collision->AddCollider({ SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 - 30, 10, 10 }, ENEMY_MASK, nullptr);
-	
-	//this->collider->to_delete = true;
-	//this->to_delete = true;
+	if (collisionMask == PLAYER_ATTACK_MASK)
+	{
+		this->collider->to_delete = true;
+		this->to_delete = true;
+	}
 }
 
 

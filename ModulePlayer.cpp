@@ -202,7 +202,6 @@ void ModulePlayer::Attack()
 	if (attackInput && !isAttacking)
 	{
 		isAttacking = true;
-		//start timer timeBetweenAttacks
 
 		if (isJumping)
 			currentIdleState = &airKickIdleState;
@@ -210,6 +209,8 @@ void ModulePlayer::Attack()
 		{
 			attackTimer.Start();
 			currentIdleState = &kickIdleState;
+			fistCollider = App->collision->AddCollider({ position.x + 30, position.y - 55, 40, 25 }, position.z, depth, PLAYER_ATTACK_MASK,
+				std::bind(&ModulePlayer::OnCollisionTrigger, this, std::placeholders::_1, std::placeholders::_2));
 		}
 	}
 
@@ -219,6 +220,7 @@ void ModulePlayer::Attack()
 		{
 			attackTimer.Stop();
 			isAttacking = false;
+			fistCollider->to_delete = true;
 		}
 	}
 

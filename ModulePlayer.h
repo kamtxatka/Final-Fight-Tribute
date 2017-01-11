@@ -59,6 +59,8 @@ public:
 	CharacterState currentState = IDLE;
 	CharacterState oldState = IDLE;
 	Collider* collider = nullptr;
+	Collider* fistCollider = nullptr;
+	Collider* kickCollider = nullptr;
 
 private:
 	int horizontalInput , verticalInput = 0;
