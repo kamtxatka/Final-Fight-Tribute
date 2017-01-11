@@ -4,4 +4,4 @@ You can go [here](https://github.com/kamtxatka/Final-Fight-Tribute) to look for 
 
 You can find the latest release [here](https://github.com/kamtxatka/Final-Fight-Tribute)
 
-And a 2min gameplay showing how the game works: 
+And a 2min gameplay showing how the game works [here](https://www.youtube.com/watch?v=2z8EKADzXZM&feature=youtu.be)
