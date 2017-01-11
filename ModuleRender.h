@@ -20,9 +20,10 @@ struct BlitCall
 	iPoint location = { 0,0,0 };
 	SDL_Rect* section = nullptr;
 	float speed = 0;
+	bool flipped = false;
 
-	BlitCall(SDL_Texture* texture, iPoint location, SDL_Rect* section, float speed = 1.0f) :
-		texture(texture), location(location), section(section), speed(speed) {}
+	BlitCall(SDL_Texture* texture, iPoint location, SDL_Rect* section, float speed = 1.0f, bool flipped = false) :
+		texture(texture), location(location), section(section), speed(speed), flipped(flipped) {}
 };
 
 
@@ -39,9 +40,9 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	bool Blit(SDL_Texture* texture, iPoint coordinates, SDL_Rect* section, float speed = 1.0f);
+	bool Blit(SDL_Texture* texture, iPoint coordinates, SDL_Rect* section, float speed = 1.0f, bool flipped = false);
 	bool BlitStretch(SDL_Texture* texture, SDL_Rect* target, SDL_Rect* section, float speed = 1.0f);
-	void AddBlitCall(SDL_Texture* texture, iPoint location, SDL_Rect* section, float speed = 1.0f);
+	void AddBlitCall(SDL_Texture* texture, iPoint location, SDL_Rect* section, float speed = 1.0f, bool flipped = false);
 	bool DrawQuad(const SDL_Rect& rect, const int& z, const int& depth, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
 public:

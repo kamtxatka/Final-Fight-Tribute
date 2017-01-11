@@ -24,7 +24,12 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 
 	position = { 150, SCREEN_HEIGHT - STREET_DEPTH, 0 };
 	depth = 10;
+	bodyWidth = groundedIdleState.w;
 	dead = false;
+	fistOffsetX = 30;
+	fistOffsetY = -55;
+	fistWidth = 40;
+	fistHeight = 25;
 
 	horizontalInput = verticalInput = 0;
 	jumpInput = isJumping = false;
@@ -34,6 +39,8 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	speed = 1;
 
 	canGoFront = canGoBack = canGoRight = canGoLeft = canGoUp = canGoDown = true;
+
+	flipped = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -104,9 +111,17 @@ update_status ModulePlayer::Update()
 
 	canGoFront = canGoBack = canGoRight = canGoLeft = canGoUp = canGoDown = true;
 
+
+	
 	// Draw everything --------------------------------------
 	if (dead == false)
-		App->renderer->AddBlitCall(graphics, position, currentIdleState);
+	{
+		if (!flipped)
+			App->renderer->AddBlitCall(graphics, position, currentIdleState);
+		else
+			App->renderer->AddBlitCall(graphics, {position.x + bodyWidth - currentIdleState->w, position.y, position.z}, currentIdleState, 1.0f, flipped);
+
+	}
 
 
 	return UPDATE_CONTINUE;
@@ -145,6 +160,9 @@ void ModulePlayer::Move()
 
 	if ((horizontalInput < 0 && canGoLeft) || (horizontalInput > 0 && canGoRight))
 		position.x += horizontalInput;
+
+	if ((!flipped && horizontalInput < 0) || (flipped && horizontalInput >0))
+		flipped = !flipped;
 
 
 	if ((verticalInput < 0 && canGoFront) || (verticalInput > 0 && canGoBack))
@@ -209,8 +227,16 @@ void ModulePlayer::Attack()
 		{
 			attackTimer.Start();
 			currentIdleState = &kickIdleState;
-			fistCollider = App->collision->AddCollider({ position.x + 30, position.y - 55, 40, 25 }, position.z, depth, PLAYER_ATTACK_MASK,
+
+			SDL_Rect fistRect = { 0,0,0,0 };
+			if (!flipped)
+				fistRect = { position.x + fistOffsetX, position.y + fistOffsetY, fistWidth, fistHeight };
+			else
+				fistRect = { position.x + bodyWidth - fistOffsetX - fistWidth, position.y + fistOffsetY, fistWidth, fistHeight };
+
+			fistCollider = App->collision->AddCollider(fistRect, position.z, depth, PLAYER_ATTACK_MASK,
 				std::bind(&ModulePlayer::OnCollisionTrigger, this, std::placeholders::_1, std::placeholders::_2));
+
 		}
 	}
 

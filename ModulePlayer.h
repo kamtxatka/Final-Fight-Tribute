@@ -55,11 +55,13 @@ public:
 
 	iPoint position = { 0,0,0 };
 	int depth = 0;
+	int bodyWidth = 0;
 	bool dead = false;
 	CharacterState currentState = IDLE;
 	CharacterState oldState = IDLE;
 	Collider* collider = nullptr;
 	Collider* fistCollider = nullptr;
+	int fistOffsetX, fistOffsetY, fistWidth, fistHeight = 0;
 	Collider* kickCollider = nullptr;
 
 private:
@@ -71,6 +73,8 @@ private:
 	int speed = 0;
 
 	bool canGoFront, canGoBack, canGoRight, canGoLeft, canGoUp, canGoDown = false;
+
+	bool flipped = false;
 
 
 

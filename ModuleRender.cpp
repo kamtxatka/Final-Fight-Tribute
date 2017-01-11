@@ -74,7 +74,7 @@ update_status ModuleRender::PostUpdate()
 	blitCallList.sort([](const BlitCall& a, const BlitCall& const b) { return a.location.z < b.location.z; });
 	for (std::list<BlitCall>::iterator it = blitCallList.begin(); it != blitCallList.end(); ++it)
 	{
-		Blit(it->texture, it->location, it->section, it->speed);
+		Blit(it->texture, it->location, it->section, it->speed, it->flipped);
 	}
 
 	blitCallList.clear();
@@ -98,7 +98,7 @@ bool ModuleRender::CleanUp()
 }
 
 // Blit to screen
-bool ModuleRender::Blit(SDL_Texture* texture, iPoint coordinates, SDL_Rect* section, float speed)
+bool ModuleRender::Blit(SDL_Texture* texture, iPoint coordinates, SDL_Rect* section, float speed, bool flipped)
 {
 	bool ret = true;
 	SDL_Rect rect;
@@ -117,10 +117,22 @@ bool ModuleRender::Blit(SDL_Texture* texture, iPoint coordinates, SDL_Rect* sect
 	rect.w *= SCREEN_SIZE;
 	rect.h *= SCREEN_SIZE;
 
-	if (SDL_RenderCopy(renderer, texture, section, &rect) != 0)
+	if (!flipped)
 	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
+		if (SDL_RenderCopy(renderer, texture, section, &rect) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
+	}
+	else
+	{
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0, NULL, SDL_FLIP_HORIZONTAL) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
+
 	}
 
 	return ret;
@@ -158,9 +170,9 @@ bool ModuleRender::BlitStretch(SDL_Texture * texture, SDL_Rect * target, SDL_Rec
 	return ret;
 }
 
-void ModuleRender::AddBlitCall(SDL_Texture * texture, iPoint location, SDL_Rect * section, float speed)
+void ModuleRender::AddBlitCall(SDL_Texture * texture, iPoint location, SDL_Rect * section, float speed, bool flipped)
 {
-	blitCallList.push_back(BlitCall(texture, location, section, speed));
+	blitCallList.push_back(BlitCall(texture, location, section, speed, flipped));
 }
 
 
