@@ -78,9 +78,9 @@ void ModulePlayer::OnCollisionTrigger(CollisionMask collisionMask, iPoint collid
 			canGoLeft = false;
 		if (collidedFrom.x > 0)
 			canGoRight = false;
-		if (collidedFrom.y < 0)
+		if (collidedFrom.y < 0 && collisionMask == OBSTACLE_MASK)
 			canGoUp = false;
-		if (collidedFrom.y > 0)
+		if (collidedFrom.y > 0 && collisionMask == OBSTACLE_MASK)
 			canGoDown = false;
 		if (collidedFrom.z < 0)
 			canGoFront = false;
@@ -154,32 +154,30 @@ void ModulePlayer::CheckInputs()
 
 void ModulePlayer::Move()
 {
-	if (isAttacking)
+	if (!isAttacking)
 	{
-		return;
-	}
+		if ((horizontalInput < 0 && canGoLeft) || (horizontalInput > 0 && canGoRight))
+			position.x += horizontalInput;
 
-	if ((horizontalInput < 0 && canGoLeft) || (horizontalInput > 0 && canGoRight))
-		position.x += horizontalInput;
-
-	if ((!flipped && horizontalInput < 0) || (flipped && horizontalInput >0))
-		flipped = !flipped;
+		if ((!flipped && horizontalInput < 0) || (flipped && horizontalInput >0))
+			flipped = !flipped;
 
 
-	if ((verticalInput < 0 && canGoFront) || (verticalInput > 0 && canGoBack))
-	{
-		if ( ((verticalInput > 0 && position.z <= STREET_DEPTH) || (verticalInput < 0 && position.z >= 0)) && (!isJumping) )
+		if ((verticalInput < 0 && canGoFront) || (verticalInput > 0 && canGoBack))
 		{
-			position.z += verticalInput;
+			if ( ((verticalInput > 0 && position.z <= STREET_DEPTH) || (verticalInput < 0 && position.z >= 0)) && (!isJumping) )
+			{
+				position.z += verticalInput;
+			}
 		}
-	}
 	
-	if (!isJumping)
-	{
-		if (horizontalInput == 0 && verticalInput == 0)
-			currentIdleState = &groundedIdleState;
-		else
-			currentIdleState = &groundedWalkingState;
+		if (!isJumping)
+		{
+			if (horizontalInput == 0 && verticalInput == 0)
+				currentIdleState = &groundedIdleState;
+			else
+				currentIdleState = &groundedWalkingState;
+		}
 	}
 
 	horizontalInput = 0;

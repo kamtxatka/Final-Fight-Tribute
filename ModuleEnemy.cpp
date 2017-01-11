@@ -31,7 +31,7 @@ bool ModuleEnemy::Start()
 	guy.fistOffsetY = -55;
 	guy.fistWidth = 40;
 	guy.fistHeight = 25;
-	guy.timeBetweenAttacks = 100;
+	guy.timeBetweenAttacks = 500;
 	guy.speed = 1;
 
 	guy.walking_animation.frames.push_back({ 0,0,0,0 });
@@ -180,6 +180,7 @@ void Enemy::OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collided
 	if (otherCollisionMask == PLAYER_ATTACK_MASK)
 	{
 		this->collider->to_delete = true;
+		this->fistCollider->to_delete = true;
 		this->to_delete = true;
 	}
 
@@ -220,6 +221,8 @@ void Enemy::TakeDecision()
 		else
 			verticalInput = 0;
 	}
+	else
+		attackInput = true;
 }
 
 void Enemy::Move()
@@ -244,13 +247,12 @@ void Enemy::Move()
 		}
 	}
 
-	/*if (!isJumping)
-	{
-		if (horizontalInput == 0 && verticalInput == 0)
-			currentIdleState = &groundedIdleState;
-		else
-			currentIdleState = &groundedWalkingState;
-	}*/
+
+	if (horizontalInput == 0 && verticalInput == 0)
+		currentIdle = &groundedIdle;
+	else
+		currentIdle = &groundedWalking;
+
 
 	/*horizontalInput = 0;
 	verticalInput = 0;*/
@@ -260,9 +262,43 @@ void Enemy::Attack()
 {
 	LOG("attacattion");
 
-	if (((position.x  < App->player->position.x) &&  (flipped)) || ((position.x > App->player->position.x) && (!flipped)))
+	if (((position.x < App->player->position.x) && (flipped)) || ((position.x > App->player->position.x) && (!flipped)))
 	{
 		flipped = !flipped;
 	}
+
+	if (attackInput && !isAttacking)
+	{
+		isAttacking = true;
+
+		attackTimer.Start();
+		currentIdle = &atackingIdle;
+
+		SDL_Rect fistRect = { 0,0,0,0 };
+		if (!flipped)
+			fistRect = { position.x + fistOffsetX, position.y + fistOffsetY, fistWidth, fistHeight };
+		else
+			fistRect = { position.x + bodyWidth - fistOffsetX - fistWidth, position.y + fistOffsetY, fistWidth, fistHeight };
+
+		fistCollider = App->collision->AddCollider(fistRect, position.z, depth, ENEMY_ATTACK_MASK,
+			std::bind(&Enemy::OnCollisionTrigger, this, std::placeholders::_1, std::placeholders::_2));
+
+	}
+
+	if (isAttacking)
+	{
+		if (attackTimer.GetTime() > timeBetweenAttacks)
+		{
+			attackTimer.Stop();
+			isAttacking = false;
+			fistCollider->to_delete = true;
+		}
+	}
+
+
+	attackInput = false;
+
+
+
 
 }
