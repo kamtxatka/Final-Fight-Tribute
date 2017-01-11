@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "ModuleCollision.h"
 #include "CustomCounter.h"
+#include "HPSystem.h"
 
 struct SDL_Texture;
 
@@ -23,11 +24,13 @@ struct Enemy
 	//there is no jump or air kick for enemies... yet
 	CustomCounter attackTimer = CustomCounter();
 	CustomCounter decisionTimer = CustomCounter();
+	CustomCounter getHitTimer = CustomCounter();
 
 	iPoint position = { 0,0,0 };
 	int depth = 0;
 	int bodyWidth, bodyHeight = 0;
 	bool dead = false;
+	HPSystem hpSystem = HPSystem(300);
 
 	Collider* collider = nullptr;
 	Collider* fistCollider = nullptr;
@@ -41,6 +44,7 @@ struct Enemy
 	bool canGoFront, canGoBack, canGoRight, canGoLeft = false;
 
 	bool flipped = false;
+	bool dmged = false;
 
 
 	Enemy();

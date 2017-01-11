@@ -82,6 +82,9 @@
     <ClInclude Include="ModuleEnemy.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
+    <ClInclude Include="HPSystem.h">
+      <Filter>Game Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

@@ -42,6 +42,8 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	canGoFront = canGoBack = canGoRight = canGoLeft = canGoUp = canGoDown = true;
 
 	flipped = false;
+
+	dmged = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -52,6 +54,8 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
+
+	hpSystem.Start();
 
 	collider = App->collision->AddCollider({ position.x, position.y ,bodyWidth, bodyHeight}, 
 		position.z, depth, PLAYER_MASK, std::bind(&ModulePlayer::OnCollisionTrigger, this, std::placeholders::_1, std::placeholders::_2));
@@ -88,6 +92,30 @@ void ModulePlayer::OnCollisionTrigger(CollisionMask collisionMask, iPoint collid
 			canGoBack = false;
 	}
 
+	if (collisionMask == ENEMY_ATTACK_MASK)
+	{
+		if (!dmged)
+		{
+			bool isDead = hpSystem.TakeDamage(10);
+			if (isDead)
+			{
+				if (collider != nullptr)
+					collider->to_delete = true;
+				if (fistCollider != nullptr)
+					fistCollider->to_delete = true;
+				if (kickCollider != nullptr)
+					kickCollider->to_delete = true;
+			}
+			getHitTimer.Start();
+			dmged = true;
+		}
+
+		
+
+		this->Disable();
+
+	}
+
 }
 
 // Update: draw background
@@ -111,6 +139,7 @@ update_status ModulePlayer::Update()
 
 	canGoFront = canGoBack = canGoRight = canGoLeft = canGoUp = canGoDown = true;
 
+	dmged = (!(getHitTimer.GetTime() > 500 || getHitTimer.GetTime() == 0));
 
 	
 	// Draw everything --------------------------------------

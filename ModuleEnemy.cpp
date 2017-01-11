@@ -94,6 +94,8 @@ void ModuleEnemy::AddEnemy(const Enemy & prefab, iPoint location)
 		std::bind(&Enemy::OnCollisionTrigger, ob, std::placeholders::_1, std::placeholders::_2));
 	ob->collider->SetPos(location.x, location.y, location.z);
 
+	ob->hpSystem.Start();
+
 	ob->decisionTimer.Start();
 
 	active.push_back(ob);
@@ -118,6 +120,7 @@ Enemy::Enemy(const Enemy & e)
 	this->current_animation = e.current_animation;
 	this->dead = false;
 	this->depth = e.depth;
+	this->dmged = false;
 
 	this->fistCollider = nullptr;
 	this->fistHeight = e.fistHeight;
@@ -161,6 +164,7 @@ bool Enemy::Update()
 	Attack();
 
 	canGoFront = canGoBack = canGoRight = canGoLeft = true;
+	dmged = (!(getHitTimer.GetTime() > 500 || getHitTimer.GetTime() == 0));
 
 
 	if (collider != nullptr)
@@ -177,12 +181,12 @@ bool Enemy::Update()
 void Enemy::OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collidedFrom)
 {
 	LOG("particle colision");
-	if (otherCollisionMask == PLAYER_ATTACK_MASK)
+	/*if (otherCollisionMask == PLAYER_ATTACK_MASK)
 	{
 		this->collider->to_delete = true;
 		this->fistCollider->to_delete = true;
 		this->to_delete = true;
-	}
+	}*/
 
 	if (otherCollisionMask == OBSTACLE_MASK || otherCollisionMask == PLAYER_MASK)
 	{
@@ -196,6 +200,32 @@ void Enemy::OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collided
 		if (collidedFrom.z < 0)
 			canGoBack = false;
 	}
+
+	if (otherCollisionMask == PLAYER_ATTACK_MASK)
+	{
+		if (!dmged)
+		{
+			bool isDead = hpSystem.TakeDamage(10);
+			if (isDead)
+			{
+				if (collider != nullptr)
+					this->collider->to_delete = true;
+				if (fistCollider != nullptr)
+					this->fistCollider->to_delete = true;
+
+				this->to_delete = true;
+			}
+			getHitTimer.Start();
+			dmged = true;
+		}
+
+
+
+		//this->Disable();
+
+	}
+
+
 }
 
 void Enemy::TakeDecision()

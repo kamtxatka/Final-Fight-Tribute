@@ -6,7 +6,7 @@
 #include "ModuleCollision.h"
 #include "Point.h"
 #include "CustomCounter.h"
-
+#include "HPSystem.h"
 
 struct SDL_Texture;
 
@@ -52,6 +52,7 @@ public:
 	SDL_Rect kickIdleState = { 0,0,0 };
 	SDL_Rect airKickIdleState = { 0,0,0 };
 	CustomCounter attackTimer = CustomCounter();
+	CustomCounter getHitTimer = CustomCounter();
 
 	iPoint position = { 0,0,0 };
 	int depth = 0;
@@ -64,6 +65,10 @@ public:
 	int fistOffsetX, fistOffsetY, fistWidth, fistHeight = 0;
 	Collider* kickCollider = nullptr;
 
+	HPSystem hpSystem = HPSystem(100);
+
+
+
 private:
 	int horizontalInput , verticalInput = 0;
 	bool jumpInput, isJumping = false;
@@ -75,6 +80,8 @@ private:
 	bool canGoFront, canGoBack, canGoRight, canGoLeft, canGoUp, canGoDown = false;
 
 	bool flipped = false;
+
+	bool dmged = false;
 
 
 
