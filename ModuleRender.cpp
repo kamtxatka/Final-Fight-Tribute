@@ -175,7 +175,6 @@ void ModuleRender::AddBlitCall(SDL_Texture * texture, iPoint location, SDL_Rect 
 	blitCallList.push_back(BlitCall(texture, location, section, speed, flipped));
 }
 
-
 // it prints 2 quads. a rectangle on min Z of the collider and another rectangle on max Z of the collider
 // (0,0,0) of a cube is on its top, left, back corner
 bool ModuleRender::DrawQuad(const SDL_Rect& rect, const int& z, const int& depth, Uint8 r, Uint8 g, Uint8 b, Uint8 a)

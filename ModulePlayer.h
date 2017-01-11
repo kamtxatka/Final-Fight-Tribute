@@ -55,7 +55,7 @@ public:
 
 	iPoint position = { 0,0,0 };
 	int depth = 0;
-	int bodyWidth = 0;
+	int bodyWidth, bodyHeight = 0;
 	bool dead = false;
 	CharacterState currentState = IDLE;
 	CharacterState oldState = IDLE;

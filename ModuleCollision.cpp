@@ -86,24 +86,24 @@ void ModuleCollision::DebugDraw()
 		case PLAYER_MASK:
 			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 50);
 			break;
-			case PLAYER_ATTACK_MASK:
+		case PLAYER_ATTACK_MASK:
 			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 200);
 			break;
-			/*case ENEMY_MASK:
-			App->renderer->DrawQuad((*it)->rect, 255, 0, 0, 150);
+		case ENEMY_MASK:
+			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 0, 0, 150);
 			break;
-			case ENEMY_ATTACK_MASK:
-			App->renderer->DrawQuad((*it)->rect, 255, 0, 0, 200);
-			break;*/
+		case ENEMY_ATTACK_MASK:
+			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 0, 0, 200);
+			break;
 		case OBSTACLE_MASK:
 			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 0, 250, 0, 50);
 			break;
-			/*case WALL_MASK:
-			App->renderer->DrawQuad((*it)->rect, 0, 250, 0, 200);
+		case WALL_MASK:
+			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 0, 250, 0, 200);
 			break;
-			default:
-			App->renderer->DrawQuad((*it)->rect, 255, 250, 250, 150);
-			break;*/
+		default:
+			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 150);
+			break;
 		}
 
 	}

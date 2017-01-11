@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ModuleRender.h"
+#include "ModulePlayer.h"
 #include "ModuleEnemy.h"
 
 
@@ -15,6 +16,7 @@ ModuleEnemy::~ModuleEnemy()
 
 bool ModuleEnemy::Start()
 {
+	LOG("Loading enemies");
 	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
 
 	guy.groundedIdle = { 91, 3, 45, 86 };
@@ -24,6 +26,7 @@ bool ModuleEnemy::Start()
 	guy.position = { 150, SCREEN_HEIGHT - STREET_DEPTH, 0 };
 	guy.depth = 10;
 	guy.bodyWidth = guy.groundedIdle.w;
+	guy.bodyHeight = guy.groundedIdle.h;
 	guy.fistOffsetX = 30;
 	guy.fistOffsetY = -55;
 	guy.fistWidth = 40;
@@ -87,9 +90,11 @@ void ModuleEnemy::AddEnemy(const Enemy & prefab, iPoint location)
 	Enemy* ob = new Enemy(prefab);
 	ob->position = location;
 
-	ob->collider = App->collision->AddCollider({location.x,location.y, ob->bodyWidth,14}, ob->position.z, ob->depth, ENEMY_MASK,
+	ob->collider = App->collision->AddCollider({location.x,location.y, ob->bodyWidth, ob->bodyHeight}, ob->position.z, ob->depth, ENEMY_MASK,
 		std::bind(&Enemy::OnCollisionTrigger, ob, std::placeholders::_1, std::placeholders::_2));
 	ob->collider->SetPos(location.x, location.y, location.z);
+
+	ob->decisionTimer.Start();
 
 	active.push_back(ob);
 
@@ -106,7 +111,8 @@ Enemy::Enemy(const Enemy & e)
 	this->attacking_animation = e.attacking_animation;
 	this->attackInput = false;
 	this->bodyWidth = e.bodyWidth;
-	this->canGoBack = canGoDown = canGoFront = canGoLeft = canGoRight = canGoUp = true;
+	this->bodyHeight = e.bodyHeight;
+	this->canGoBack = canGoFront = canGoLeft = canGoRight = true;
 	this->collider = nullptr;
 	this->currentIdle = e.currentIdle;
 	this->current_animation = e.current_animation;
@@ -145,12 +151,25 @@ bool Enemy::Update()
 	if (to_delete)
 		ret = false;
 
+	if (decisionTimer.GetTime() > 200)
+	{
+		TakeDecision();
+		decisionTimer.Stop();
+		decisionTimer.Start();
+	}
+	Move();
+	Attack();
+
+	canGoFront = canGoBack = canGoRight = canGoLeft = true;
+
+
 	if (collider != nullptr)
 	{
 		collider->rect.x = position.x;
 		collider->rect.y = position.y;
 		collider->z = position.z;
 	}
+	
 
 	return ret;
 }
@@ -158,4 +177,92 @@ bool Enemy::Update()
 void Enemy::OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collidedFrom)
 {
 	LOG("particle colision");
+	if (otherCollisionMask == PLAYER_ATTACK_MASK)
+	{
+		this->collider->to_delete = true;
+		this->to_delete = true;
+	}
+
+	if (otherCollisionMask == OBSTACLE_MASK || otherCollisionMask == PLAYER_MASK)
+	{
+		collidedFrom.BloquedFrom();
+		if (collidedFrom.x > 0)
+			canGoLeft = false;
+		if (collidedFrom.x < 0)
+			canGoRight = false;
+		if (collidedFrom.z > 0)
+			canGoFront = false;
+		if (collidedFrom.z < 0)
+			canGoBack = false;
+	}
+}
+
+void Enemy::TakeDecision()
+{
+
+	horizontalInput = 0;
+	verticalInput = 0;
+	attackInput = false;
+
+	if (App->player->position.DistanceTo(position) > bodyWidth + 10 && App->player->position.DistanceTo(position) < 250)
+	{
+		if (App->player->position.x > position.x)
+			horizontalInput += speed;
+		else if (App->player->position.x < position.x)
+			horizontalInput -= speed;
+		else
+			horizontalInput = 0;
+
+		if (App->player->position.z > position.z)
+			verticalInput += speed;
+		else if (App->player->position.z < position.z)
+			verticalInput -= speed;
+		else
+			verticalInput = 0;
+	}
+}
+
+void Enemy::Move()
+{
+	if (isAttacking)
+	{
+		return;
+	}
+
+	if ((horizontalInput < 0 && canGoLeft) || (horizontalInput > 0 && canGoRight))
+		position.x += horizontalInput;
+
+	if ((!flipped && horizontalInput < 0) || (flipped && horizontalInput >0))
+		flipped = !flipped;
+
+
+	if ((verticalInput < 0 && canGoFront) || (verticalInput > 0 && canGoBack))
+	{
+		if (((verticalInput == 1 && position.z <= STREET_DEPTH) || (verticalInput == -1 && position.z >= 0)))
+		{
+			position.z += verticalInput;
+		}
+	}
+
+	/*if (!isJumping)
+	{
+		if (horizontalInput == 0 && verticalInput == 0)
+			currentIdleState = &groundedIdleState;
+		else
+			currentIdleState = &groundedWalkingState;
+	}*/
+
+	/*horizontalInput = 0;
+	verticalInput = 0;*/
+}
+
+void Enemy::Attack()
+{
+	LOG("attacattion");
+
+	if (((position.x  < App->player->position.x) &&  (flipped)) || ((position.x > App->player->position.x) && (!flipped)))
+	{
+		flipped = !flipped;
+	}
+
 }

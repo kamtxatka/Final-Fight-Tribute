@@ -22,10 +22,11 @@ struct Enemy
 	Animation attacking_animation;
 	//there is no jump or air kick for enemies... yet
 	CustomCounter attackTimer = CustomCounter();
+	CustomCounter decisionTimer = CustomCounter();
 
 	iPoint position = { 0,0,0 };
 	int depth = 0;
-	int bodyWidth = 0;
+	int bodyWidth, bodyHeight = 0;
 	bool dead = false;
 
 	Collider* collider = nullptr;
@@ -35,9 +36,9 @@ struct Enemy
 	int horizontalInput, verticalInput = 0;
 	bool attackInput, isAttacking = false;
 	Uint32 timeBetweenAttacks = 0;
-	int speed = 0;
+	float speed = 0;
 
-	bool canGoFront, canGoBack, canGoRight, canGoLeft, canGoUp, canGoDown = false;
+	bool canGoFront, canGoBack, canGoRight, canGoLeft = false;
 
 	bool flipped = false;
 
@@ -47,6 +48,10 @@ struct Enemy
 	~Enemy();
 	bool Update();
 	void OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collidedFrom);
+
+	void TakeDecision();
+	void Move();
+	void Attack();
 
 };
 

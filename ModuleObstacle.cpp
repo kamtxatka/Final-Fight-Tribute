@@ -112,10 +112,10 @@ bool Obstacle::Update()
 	return ret;
 }
 
-void Obstacle::OnCollisionTrigger(CollisionMask collisionMask, iPoint collidedFrom)
+void Obstacle::OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collidedFrom)
 {
 	//LOG("Obstacle colision");
-	if (collisionMask == PLAYER_ATTACK_MASK)
+	if (otherCollisionMask == PLAYER_ATTACK_MASK)
 	{
 		this->collider->to_delete = true;
 		this->to_delete = true;

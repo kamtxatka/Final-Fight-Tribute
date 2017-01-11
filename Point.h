@@ -93,7 +93,7 @@ public:
 		TYPE fy = y - v.y;
 		TYPE fz = z - v.z;
 
-		return sqrt((fx*fx) + (fy*fy) + (fz*fz));
+		return (TYPE)sqrt((fx*fx) + (fy*fy) + (fz*fz));
 	}
 
 
@@ -123,6 +123,7 @@ public:
 			x = 0;
 			y = 0;
 		}
+		//else if (dx == dy || dx = dz || dy = dz)
 	}
 
 };

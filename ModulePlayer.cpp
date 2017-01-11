@@ -25,6 +25,7 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	position = { 150, SCREEN_HEIGHT - STREET_DEPTH, 0 };
 	depth = 10;
 	bodyWidth = groundedIdleState.w;
+	bodyHeight = groundedIdleState.h;
 	dead = false;
 	fistOffsetX = 30;
 	fistOffsetY = -55;
@@ -36,7 +37,7 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	jumpForce = 75;
 	attackInput = isAttacking = false;
 	timeBetweenAttacks = 100;
-	speed = 1;
+	speed = 2;
 
 	canGoFront = canGoBack = canGoRight = canGoLeft = canGoUp = canGoDown = true;
 
@@ -52,7 +53,7 @@ bool ModulePlayer::Start()
 	LOG("Loading player");
 	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
 
-	collider = App->collision->AddCollider({ position.x, position.y ,bodyWidth, 14}, 
+	collider = App->collision->AddCollider({ position.x, position.y ,bodyWidth, bodyHeight}, 
 		position.z, depth, PLAYER_MASK, std::bind(&ModulePlayer::OnCollisionTrigger, this, std::placeholders::_1, std::placeholders::_2));
 
 	return true;
@@ -167,7 +168,7 @@ void ModulePlayer::Move()
 
 	if ((verticalInput < 0 && canGoFront) || (verticalInput > 0 && canGoBack))
 	{
-		if ( ((verticalInput == 1 && position.z <= STREET_DEPTH) || (verticalInput == -1 && position.z >= 0)) && (!isJumping) )
+		if ( ((verticalInput > 0 && position.z <= STREET_DEPTH) || (verticalInput < 0 && position.z >= 0)) && (!isJumping) )
 		{
 			position.z += verticalInput;
 		}
@@ -200,7 +201,10 @@ void ModulePlayer::Jump()
 	if (isJumping || (canGoDown && position.y < SCREEN_HEIGHT - STREET_DEPTH))
 	{
 		if (position.y < SCREEN_HEIGHT - STREET_DEPTH && canGoDown)
+		{
+			canGoUp = false;
 			position.y += 2;
+		}
 		else
 		{
 			isJumping = false;
