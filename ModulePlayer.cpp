@@ -23,18 +23,17 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	currentIdleState = &groundedIdleState;
 
 	position = { 150, SCREEN_HEIGHT - STREET_DEPTH, 0 };
-	depth = 40;
+	depth = 10;
 	dead = false;
 
-	horizontalInput = 0;
-	verticalInput = 0;
-	jumpInput = false;
-	isJumping = false;
+	horizontalInput = verticalInput = 0;
+	jumpInput = isJumping = false;
 	jumpForce = 75;
-	attackInput = false;
-	isAttacking = false;
+	attackInput = isAttacking = false;
 	timeBetweenAttacks = 100;
 	speed = 1;
+
+	canGoFront = canGoBack = canGoRight = canGoLeft = canGoUp = canGoDown = true;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -47,7 +46,8 @@ bool ModulePlayer::Start()
 
 	graphics = App->textures->Load("Sprites/Personajes/FFOne_Guy.gif");
 
-	collider = App->collision->AddCollider({ position.x, position.y ,30, 14}, position.z, depth, PLAYER_MASK, nullptr);
+	collider = App->collision->AddCollider({ position.x, position.y ,30, 14}, 
+		position.z, depth, PLAYER_MASK, std::bind(&ModulePlayer::OnCollisionTrigger, this, std::placeholders::_1, std::placeholders::_2));
 
 	return true;
 }
@@ -62,6 +62,27 @@ bool ModulePlayer::CleanUp()
 	return true;
 }
 
+void ModulePlayer::OnCollisionTrigger(CollisionMask collisionMask, iPoint collidedFrom)
+{
+	if (collisionMask == OBSTACLE_MASK || collisionMask == ENEMY_MASK)
+	{
+		collidedFrom.BloquedFrom();
+		if (collidedFrom.x < 0)
+			canGoLeft = false;
+		if (collidedFrom.x > 0)
+			canGoRight = false;
+		if (collidedFrom.y < 0)
+			canGoUp = false;
+		if (collidedFrom.y > 0)
+			canGoDown = false;
+		if (collidedFrom.z < 0)
+			canGoFront = false;
+		if (collidedFrom.z > 0)
+			canGoBack = false;
+	}
+
+}
+
 // Update: draw background
 update_status ModulePlayer::Update()
 {
@@ -74,6 +95,15 @@ update_status ModulePlayer::Update()
 	Jump();
 	Attack();
 	
+
+	//we actualize the collider's location
+	collider->rect.x = position.x;
+	collider->rect.y = position.y;
+	collider->z = position.z;
+
+
+	canGoFront = canGoBack = canGoRight = canGoLeft = canGoUp = canGoDown = true;
+
 	// Draw everything --------------------------------------
 	if (dead == false)
 		App->renderer->AddBlitCall(graphics, position, currentIdleState);
@@ -113,17 +143,15 @@ void ModulePlayer::Move()
 		return;
 	}
 
-	if (horizontalInput != 0)
-	{
+	if ((horizontalInput < 0 && canGoLeft) || (horizontalInput > 0 && canGoRight))
 		position.x += horizontalInput;
-		collider->rect.x = position.x;
-	}
-	if (verticalInput != 0)
+
+
+	if ((verticalInput < 0 && canGoFront) || (verticalInput > 0 && canGoBack))
 	{
 		if ( ((verticalInput == 1 && position.z <= STREET_DEPTH) || (verticalInput == -1 && position.z >= 0)) && (!isJumping) )
 		{
 			position.z += verticalInput;
-			collider->z = position.z;
 		}
 	}
 	
@@ -143,16 +171,17 @@ void ModulePlayer::Move()
 
 void ModulePlayer::Jump()
 {
-	if (jumpInput && !isJumping && !isAttacking)
+	if (jumpInput && !isJumping && !isAttacking && canGoUp)
 	{
 		isJumping = true;
 		position.y -= jumpForce;
+		canGoDown = true;
 		currentIdleState = &airIdleState;
 	}
 
-	if (isJumping)
+	if (isJumping || (canGoDown && position.y < SCREEN_HEIGHT - STREET_DEPTH))
 	{
-		if (position.y < SCREEN_HEIGHT - STREET_DEPTH)
+		if (position.y < SCREEN_HEIGHT - STREET_DEPTH && canGoDown)
 			position.y += 2;
 		else
 		{
@@ -163,7 +192,6 @@ void ModulePlayer::Jump()
 			}
 		}
 	}
-	collider->rect.y = position.y;
 
 	jumpInput = false;
 

@@ -25,7 +25,7 @@ bool ModuleObstacle::Start()
 	barrel.collider = nullptr;
 	barrel.destructible = false;
 	barrel.location = {0,0};
-	barrel.depth = 5;
+	barrel.depth = 10;
 	barrel.rect = { 30, 178, 32, 62 };
 	barrel.to_delete = false;
 	barrel.collisionMask = OBSTACLE_MASK;
@@ -78,7 +78,7 @@ void ModuleObstacle::AddObstacle(const Obstacle & prefab, iPoint location)
 	ob->location = location;
 
 	ob->collider = App->collision->AddCollider(ob->rect, ob->location.z, ob->depth, ob->collisionMask,
-		std::bind(&Obstacle::OnCollisionTrigger, ob));
+		std::bind(&Obstacle::OnCollisionTrigger, ob, std::placeholders::_1, std::placeholders::_2));
 	ob->collider->SetPos(location.x, location.y, location.z);
 
 	active.push_back(ob);
@@ -109,9 +109,9 @@ bool Obstacle::Update()
 	return ret;
 }
 
-void Obstacle::OnCollisionTrigger()
+void Obstacle::OnCollisionTrigger(CollisionMask collisionMask, iPoint collidedFrom)
 {
-	LOG("Obstacle colision");
+	//LOG("Obstacle colision");
 	//App->collision->AddCollider({ SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 - 30, 10, 10 }, ENEMY_MASK, nullptr);
 	
 	//this->collider->to_delete = true;

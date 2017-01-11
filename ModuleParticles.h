@@ -32,7 +32,7 @@ struct Particle
 	Particle(const Particle& p);
 	~Particle();
 	bool Update();
-	void OnCollisionTrigger();
+	void OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collidedFrom);
 };
 
 class ModuleParticles : public Module

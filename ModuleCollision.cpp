@@ -59,10 +59,10 @@ update_status ModuleCollision::Update()
 			if (CheckCollisionMasks((*it1)->collisionMask,(*it2)->collisionMask))
 			{
 				//if so, do they collide?
-				if ((*it1)->CheckCollision((*it2)->rect, (*it2)->z, (*it2)->depth))
+				if ((*it1)->CheckCollision(*it2))
 				{
-					(*it1)->OnCollisionTrigger(**it2);
-					(*it2)->OnCollisionTrigger(**it1);
+					/*(*it1)->OnCollisionTrigger(**it2);
+					(*it2)->OnCollisionTrigger(**it1);*/
 				}
 			}
 		}
@@ -146,7 +146,7 @@ bool ModuleCollision::CleanUp()
 }
 
 Collider* ModuleCollision::AddCollider(const SDL_Rect& rect, const int& z, const int& depth,
-	const CollisionMask collisionMask, std::function<void()> OnCollisionCallback)
+	const CollisionMask collisionMask, std::function<void(CollisionMask, iPoint)> OnCollisionCallback)
 {
 	Collider* ret = new Collider(rect, z, depth, OnCollisionCallback);
 	ret->collisionMask = collisionMask;
@@ -158,12 +158,12 @@ Collider* ModuleCollision::AddCollider(const SDL_Rect& rect, const int& z, const
 
 // -----------------------------------------------------
 
-bool Collider::CheckCollision(const SDL_Rect& otherRect, const int& z, const int& depth) const
+bool Collider::CheckCollision(const Collider* other) const
 {
 	// TODO 7: Create by hand (avoid consulting the internet) a simple collision test
 	// Return true if the argument and the own rectangle are intersecting
 
-	bool ret = true;
+	bool ret = false;
 
 	int LWall = this->rect.x;
 	int RWall = this->rect.x + this->rect.w;
@@ -172,32 +172,77 @@ bool Collider::CheckCollision(const SDL_Rect& otherRect, const int& z, const int
 	int FPoint = this->z;
 	int BPoint = this->z - this->depth;
 
-	int otherLWall = otherRect.x;
-	int otherRWall = otherRect.x + otherRect.w;
-	int otherTWall = otherRect.y - otherRect.h;
-	int otherDWall = otherRect.y;
-	int otherFPoint = z;
-	int otherBPoint = z - depth;
+	int otherLWall = other->rect.x;
+	int otherRWall = other->rect.x + other->rect.w;
+	int otherTWall = other->rect.y - other->rect.h;
+	int otherDWall = other->rect.y;
+	int otherFPoint = other->z;
+	int otherBPoint = other->z - other->depth;
 
 
-	if ((BPoint > otherFPoint) || (FPoint < otherBPoint))
-		ret = false;
-	else if ((LWall > otherRWall) || (RWall < otherLWall))
-		ret = false;
-	else if ((DWall < otherTWall) || (TWall > otherDWall))
-		ret = false;
+	iPoint solapation = { 0,0,0 };
+	bool colisionOnX = false;
+	bool colisionOnY = false;
+	bool colisionOnZ = false;
+
+
+	if (!((BPoint >= otherFPoint) || (FPoint <= otherBPoint)))
+		colisionOnZ = true;
+
+	if (colisionOnZ)
+	{
+		if (!((LWall >= otherRWall) || (RWall <= otherLWall)))
+			colisionOnX = true;
+	}
+
+	if (colisionOnZ && colisionOnX)
+	{
+		if (!((TWall >= otherDWall) || (DWall <= otherTWall)))
+		{
+			colisionOnY = true;
+			ret = true;
+		}
+	}
+
+
+	if (colisionOnZ)
+		solapation.z = (FPoint > otherFPoint) ? BPoint - otherFPoint : FPoint - otherBPoint;
+	if (colisionOnX)
+		solapation.x = (RWall > otherRWall) ? LWall - otherRWall : RWall - otherLWall;
+	if (colisionOnY)
+		solapation.y = (DWall > otherDWall) ? TWall - otherDWall : DWall - otherTWall;
+
+
+	//if (ret && this->collisionMask == PLAYER_MASK )
+	//	LOG("solapation is x: %d,  y: %d,  z: %d  ", solapation.x, solapation.y, solapation.z);
+
+	if (ret)
+	{
+		App->renderer->DrawQuad(rect, z, 0, 255, 250, 250, 255);
+		App->renderer->DrawQuad(other->rect, other->z, other->depth, 255, 250, 250, 255);
+
+		if (this->OnCollisionCallback != nullptr)
+			this->OnCollisionCallback(other->collisionMask, solapation);
+		if (other->OnCollisionCallback != nullptr)
+			other->OnCollisionCallback(other->collisionMask, solapation);
+	}
+
+
 	//}
 	return ret;
 }
 
 
-void Collider::OnCollisionTrigger(const Collider & otherCollider) const
+void Collider::OnCollisionTrigger(const Collider & otherCollider, iPoint solapation) const
 {
-	App->renderer->DrawQuad(rect, z, 0, 255, 250, 250, 255);
+	//App->renderer->DrawQuad(rect, z, 0, 255, 250, 250, 255);
 	//App->renderer->DrawQuad(otherCollider.rect, 255, 250, 250, 255);
 
-	if (this->OnCollisionCallback != nullptr)
-		this->OnCollisionCallback();
+
+	//iPoint collidedFrom = { otherCollider.rect.x - this->rect.x, otherCollider.rect.y - this->rect.y, otherCollider.z - this->z };
+
+	//if (this->OnCollisionCallback != nullptr)
+		//this->OnCollisionCallback(otherCollider.collisionMask, collidedFrom);
 	/*if (otherCollider.OnCollisionCallback != nullptr)
 	otherCollider.OnCollisionCallback();*/
 }

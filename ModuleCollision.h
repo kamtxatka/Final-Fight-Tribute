@@ -24,15 +24,15 @@ struct Collider
 	int depth = 0;
 	bool to_delete = false;
 	CollisionMask  collisionMask = DEFAULT_MASK;
-	std::function<void()> OnCollisionCallback = nullptr;
+	std::function<void(CollisionMask, iPoint)> OnCollisionCallback = nullptr;
 	//void(*OnCollisionCallback)() = nullptr;
 
 
 	// TODO 10: Add a way to notify other classes that a collision happened
-	void OnCollisionTrigger(const Collider& otherCollider) const;
+	void OnCollisionTrigger(const Collider& otherCollider, iPoint solapation) const;
 
 
-	Collider(SDL_Rect rectangle, int z, int depth, std::function<void()> OnCollisionCallback) :
+	Collider(SDL_Rect rectangle, int z, int depth, std::function<void(CollisionMask, iPoint)> OnCollisionCallback) :
 		rect(rectangle), z(z), depth(depth), OnCollisionCallback(OnCollisionCallback)
 	{}
 
@@ -43,7 +43,7 @@ struct Collider
 		this->z = z;
 	}
 
-	bool CheckCollision(const SDL_Rect& r, const int& z, const int& depth) const;
+	bool CheckCollision(const Collider* other) const;
 };
 
 class ModuleCollision : public Module
@@ -59,7 +59,7 @@ public:
 	bool CleanUp();
 
 	Collider* AddCollider(const SDL_Rect& rect, const int& z, const int& depth,
-		const CollisionMask collisionMask, std::function<void()> OnCollisionCallback);
+		const CollisionMask collisionMask, std::function<void(CollisionMask, iPoint)> OnCollisionCallback);
 
 	void DebugDraw();
 	bool CheckCollisionMasks(const CollisionMask mask, const CollisionMask otherMask) const;

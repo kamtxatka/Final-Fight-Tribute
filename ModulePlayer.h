@@ -27,6 +27,7 @@ public:
 	bool Start();
 	update_status Update();
 	bool CleanUp();
+	void OnCollisionTrigger(CollisionMask collisionMask, iPoint collidedFrom);
 
 	void CheckInputs();
 	void Move();
@@ -36,6 +37,8 @@ public:
 
 
 	void InputManageForTesting();
+
+
 	
 
 public:
@@ -58,15 +61,17 @@ public:
 	Collider* collider = nullptr;
 
 private:
-	int horizontalInput = 0;
-	int verticalInput = 0;
-	bool jumpInput = false;
-	bool isJumping = false;
+	int horizontalInput , verticalInput = 0;
+	bool jumpInput, isJumping = false;
 	int jumpForce = 0;
-	bool attackInput = false;
-	bool isAttacking = false;
+	bool attackInput, isAttacking = false;
 	Uint32 timeBetweenAttacks = 0;
 	int speed = 0;
+
+	bool canGoFront, canGoBack, canGoRight, canGoLeft, canGoUp, canGoDown = false;
+
+
+
 };
 
 #endif

@@ -106,7 +106,7 @@ void ModuleParticles::AddParticle(const Particle& prefab, iPoint& location)
 
 	//una vez añadida le ponemos la particula. w y h seran los de la animacion pero la x y hay que ponerl la misma que la particula
 	p->collider = App->collision->AddCollider({ p->animation.GetCurrentFrame() }, p->location.z, p->depth,
-		p->collisionMask, std::bind(&Particle::OnCollisionTrigger, p));
+		p->collisionMask, std::bind(&Particle::OnCollisionTrigger, p, std::placeholders::_1, std::placeholders::_2));
 
 	p->collider->rect.x = p->location.x + p->direction.x;
 	p->collider->rect.y = p->location.y + p->direction.y;
@@ -172,7 +172,7 @@ bool Particle::Update()
 	return ret;
 }
 
-void Particle::OnCollisionTrigger()
+void Particle::OnCollisionTrigger(CollisionMask otherCollisionMask, iPoint collidedFrom)
 {
 	LOG("particle colision");
 	//App->collision->AddCollider({ SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 - 30, 10, 10 }, 0, 0, ENEMY_MASK, nullptr);

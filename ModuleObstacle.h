@@ -19,7 +19,7 @@ struct Obstacle
 	Obstacle(const Obstacle& p);
 	~Obstacle();
 	bool Update();
-	void OnCollisionTrigger();
+	void OnCollisionTrigger(CollisionMask collisionMask, iPoint collidedFrom);
 };
 
 

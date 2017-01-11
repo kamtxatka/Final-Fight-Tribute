@@ -36,8 +36,8 @@ bool ModuleScene1_1::Start()
 	App->collision->Enable();
 
 	App->audio->PlayMusic("Audio/GoAhead.ogg", 1.0f);
-	App->obstacles->AddObstacle(App->obstacles->barrel, { 100, SCREEN_HEIGHT - STREET_DEPTH, 0 });
-	App->obstacles->AddObstacle(App->obstacles->barrel, { 50, SCREEN_HEIGHT - STREET_DEPTH, 0 });
+	App->obstacles->AddObstacle(App->obstacles->barrel, { 100, SCREEN_HEIGHT - STREET_DEPTH, 10 });
+	App->obstacles->AddObstacle(App->obstacles->barrel, { 20, SCREEN_HEIGHT - STREET_DEPTH, 0 });
 
 	return true;
 }

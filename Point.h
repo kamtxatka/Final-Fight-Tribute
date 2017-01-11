@@ -95,6 +95,31 @@ public:
 
 		return sqrt((fx*fx) + (fy*fy) + (fz*fz));
 	}
+
+
+	void BloquedFrom()
+	{
+		TYPE dx = std::abs(x);
+		TYPE dy = std::abs(y);
+		TYPE dz = std::abs(z);
+
+		if (dx < dy && dx < dz)
+		{
+			y = 0;
+			z = 0;
+		}
+		else if (dy < dx && dy < dz)
+		{
+			x = 0;
+			z = 0;
+		}
+		else if (dz < dx && dz < dy)
+		{
+			x = 0;
+			y = 0;
+		}
+	}
+
 };
 
 typedef Point<int> iPoint;
