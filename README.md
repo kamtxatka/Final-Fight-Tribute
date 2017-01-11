@@ -2,6 +2,6 @@
 
 You can go [here](https://github.com/kamtxatka/Final-Fight-Tribute) to look for the original code
 
-You can find the latest release [here](https://github.com/kamtxatka/Final-Fight-Tribute)
+You can find the latest release [here](https://github.com/kamtxatka/Final-Fight-Tribute/releases/tag/v1.0.0)
 
 And a 2min gameplay showing how the game works [here](https://www.youtube.com/watch?v=2z8EKADzXZM&feature=youtu.be)
