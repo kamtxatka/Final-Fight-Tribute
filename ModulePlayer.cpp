@@ -105,14 +105,12 @@ void ModulePlayer::OnCollisionTrigger(CollisionMask collisionMask, iPoint collid
 					fistCollider->to_delete = true;
 				if (kickCollider != nullptr)
 					kickCollider->to_delete = true;
+				this->Disable();
 			}
 			getHitTimer.Start();
 			dmged = true;
 		}
 
-		
-
-		this->Disable();
 
 	}
 
