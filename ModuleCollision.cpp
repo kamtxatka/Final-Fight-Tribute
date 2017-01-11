@@ -71,8 +71,8 @@ update_status ModuleCollision::Update()
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
-	if(debug == true)
-		DebugDraw();
+	/*if(debug == true)
+		DebugDraw();*/
 
 	return UPDATE_CONTINUE;
 }
@@ -81,7 +81,7 @@ void ModuleCollision::DebugDraw()
 {
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
 	{
-		switch ((*it)->collisionMask)
+		/*switch ((*it)->collisionMask)
 		{
 		case PLAYER_MASK:
 			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 50);
@@ -104,7 +104,7 @@ void ModuleCollision::DebugDraw()
 		default:
 			App->renderer->DrawQuad((*it)->rect, (*it)->z, (*it)->depth, 255, 250, 250, 150);
 			break;
-		}
+		}*/
 
 	}
 }
@@ -218,8 +218,8 @@ bool Collider::CheckCollision(const Collider* other) const
 
 	if (ret)
 	{
-		App->renderer->DrawQuad(rect, z, 0, 255, 250, 250, 255);
-		App->renderer->DrawQuad(other->rect, other->z, other->depth, 255, 250, 250, 255);
+		/*App->renderer->DrawQuad(rect, z, 0, 255, 250, 250, 255);
+		App->renderer->DrawQuad(other->rect, other->z, other->depth, 255, 250, 250, 255);*/
 
 		if (this->OnCollisionCallback != nullptr)
 			this->OnCollisionCallback(other->collisionMask, solapation);
